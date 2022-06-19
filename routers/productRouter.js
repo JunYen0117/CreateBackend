@@ -26,7 +26,10 @@ router.get('/classification/:classificationId', async (req, res, next) => {
 
 // localhost:3003/api/product/category/1
 router.get('/category/:categoryId', async (req, res, next) => {
-  const sql = ''
+  const sql =
+  'SELECT product.id, product.product_name, product.price, product.image, vendor.business_name FROM product JOIN vendor ON product.vendor_id = vendor.id WHERE product.category_id = ?';
+  let [category] = await pool.execute(sql, [req.params.categoryId]);
+  res.json(category);
 });
 
 module.exports = router;
