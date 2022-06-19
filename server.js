@@ -6,16 +6,12 @@ const cors = require('cors');
 
 let port = process.env.SERVER_PORT || 3003;
 
-console.log(process.env.SERVER_PORT)
-
 app.use(
   cors({
     origin: ['http://localhost:3000'],
     credentials: true,
   })
 );
-
-// const pool = require('../utils/database')
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -29,7 +25,7 @@ app.get('/', (req, res, next) => {
 app.use('/images/product', express.static(path.join(__dirname, 'public', 'img', 'products')));
 
 // Routers
-const productRouter = require('./routers/product')
+const productRouter = require('./routers/productRouter')
 app.use('/api/product', productRouter);
 
 
