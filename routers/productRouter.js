@@ -5,25 +5,21 @@ const pool = require('../utils/database');
 // localhost:3003/api/product?page=1
 router.get('/', async (req, res, next) => {
   // 如果沒有宣告 page，則預設 page = 1
-  let page = req.query.page || 1;
+  const page = req.query.page || 1;
+  // 把 query.String 轉成數字
+  const classificationId = Number(req.query.classificationId) || -1;
 
   // 1. 取得 ?page 的值，目前頁數
   console.log('current page : ', page);
-  
-  // 預設值 -1
-  req.query.classificationId = req.query.classificationId || -1;
 
-  // 設定預設值，取得總筆數使用
-  let sql = '';
-  let products = [];
+  // 設定預設值，隨著條件變動
+  let sql = 'SELECT product.id, product.product_name, product.price, product.image, vendor.business_name FROM product JOIN vendor ON product.vendor_id = vendor.id';
+  let [products] = await pool.execute(sql);
 
   // 2. 取得目前的總筆數
-  if(Number(req.query.classificationId) === -1) {
-    sql = `SELECT product.id, product.product_name, product.price, product.image, vendor.business_name FROM product JOIN vendor ON product.vendor_id = vendor.id`;
-    [products] = await pool.execute(sql);
-  } else {
+  if(classificationId !== -1) {
     sql = `SELECT product.id, product.product_name, product.price, product.image, vendor.business_name FROM product JOIN vendor ON product.vendor_id = vendor.id WHERE product.classification_id = ?`;
-    [products] = await pool.execute(sql, [req.query.classificationId]);
+    [products] = await pool.execute(sql, [classificationId]);
   }
 
   // 3. 計算總共有幾頁
@@ -39,17 +35,14 @@ router.get('/', async (req, res, next) => {
   let offset = (page - 1) * perPage;
   console.log('offset : ', offset);
 
-  // 設定預設值，取得這一頁的資料使用
-  let sqlPage = '';
-  let pageProducts = [];
+  // 設定預設值，隨著條件變動
+  let sqlPage = 'SELECT product.id, product.product_name, product.price, product.image, vendor.business_name FROM product JOIN vendor ON product.vendor_id = vendor.id LIMIT ? OFFSET ?';
+  let [pageProducts] = await pool.execute(sqlPage, [perPage, offset]);
 
   // 5. 取得這一頁的資料
-  if(Number(req.query.classificationId) === -1) {
-    sqlPage = `SELECT product.id, product.product_name, product.price, product.image, vendor.business_name FROM product JOIN vendor ON product.vendor_id = vendor.id LIMIT ? OFFSET ?`;
-    [pageProducts] = await pool.execute(sqlPage, [perPage, offset]);
-  } else {
+  if(classificationId !== -1) {
     sqlPage = `SELECT product.id, product.product_name, product.price, product.image, vendor.business_name FROM product JOIN vendor ON product.vendor_id = vendor.id WHERE product.classification_id = ? LIMIT ? OFFSET ?`;
-    [pageProducts] = await pool.execute(sqlPage, [req.query.classificationId, perPage, offset]);
+    [pageProducts] = await pool.execute(sqlPage, [classificationId, perPage, offset]);
   }
 
   console.log('sqlPage : ', sqlPage)
@@ -64,6 +57,13 @@ router.get('/', async (req, res, next) => {
     },
     data: pageProducts,
   });
+});
+
+// localhost:3003/api/product/category/1
+router.get('/category/:categoryId', async (req, res, next) => {
+  const sql = 'SELECT product.id, product.product_name, product.price, product.image, vendor.business_name FROM product JOIN vendor ON product.vendor_id = vendor.id WHERE product.category_id = ?';
+  let [category] = await pool.execute(sql, [req.params.categoryId]);
+  res.json(category);
 });
 
 // --------- Sidebar ---------
@@ -82,11 +82,5 @@ router.get('/classification/:classificationId/category', async (req, res, next) 
 });
 // --------- Sidebar ---------
 
-// localhost:3003/api/product/category/1
-router.get('/category/:categoryId', async (req, res, next) => {
-  const sql = 'SELECT product.id, product.product_name, product.price, product.image, vendor.business_name FROM product JOIN vendor ON product.vendor_id = vendor.id WHERE product.category_id = ?';
-  let [category] = await pool.execute(sql, [req.params.categoryId]);
-  res.json(category);
-});
 
 module.exports = router;
