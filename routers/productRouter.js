@@ -9,20 +9,20 @@ router.get('/', async (req, res, next) => {
   // 把 query.String 轉成數字
   const classificationId = Number(req.query.classificationId) || -1;
 
-  // 1. 取得 ?page 的值，目前頁數
+  // 取得 ?page 的值，目前頁數
   console.log('current page : ', page);
 
   // 設定預設值，隨著條件變動
   let sql = 'SELECT product.id, product.product_name, product.price, product.image, vendor.business_name FROM product JOIN vendor ON product.vendor_id = vendor.id';
   let [products] = await pool.execute(sql);
 
-  // 2. 取得目前的總筆數
+  // 取得目前的總筆數；依條件決定使用的 sql
   if(classificationId !== -1) {
     sql = `SELECT product.id, product.product_name, product.price, product.image, vendor.business_name FROM product JOIN vendor ON product.vendor_id = vendor.id WHERE product.classification_id = ?`;
     [products] = await pool.execute(sql, [classificationId]);
   }
 
-  // 3. 計算總共有幾頁
+  // 計算總共有幾頁
   const total = products.length;
   console.log('total : ', total);
 
@@ -31,7 +31,7 @@ router.get('/', async (req, res, next) => {
   const lastPage = Math.ceil(total / perPage); 
   console.log('lastPage : ', lastPage);
 
-  // 4. 計算 offset 是多少 (計算要跳過幾筆)
+  // 計算 offset 是多少 (計算要跳過幾筆)
   let offset = (page - 1) * perPage;
   console.log('offset : ', offset);
 
@@ -39,7 +39,7 @@ router.get('/', async (req, res, next) => {
   let sqlPage = 'SELECT product.id, product.product_name, product.price, product.image, vendor.business_name FROM product JOIN vendor ON product.vendor_id = vendor.id LIMIT ? OFFSET ?';
   let [pageProducts] = await pool.execute(sqlPage, [perPage, offset]);
 
-  // 5. 取得這一頁的資料
+  // 取得這一頁的資料
   if(classificationId !== -1) {
     sqlPage = `SELECT product.id, product.product_name, product.price, product.image, vendor.business_name FROM product JOIN vendor ON product.vendor_id = vendor.id WHERE product.classification_id = ? LIMIT ? OFFSET ?`;
     [pageProducts] = await pool.execute(sqlPage, [classificationId, perPage, offset]);
