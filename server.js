@@ -28,6 +28,8 @@ app.use('/images/product', express.static(path.join(__dirname, 'public', 'img', 
 const productRouter = require('./routers/productRouter')
 app.use('/api/product', productRouter);
 
+const productOrderRouter = require('./routers/productOrderRouter')
+app.use('/api/productorder', productOrderRouter)
 
 
 app.use((req, res, next) => {
