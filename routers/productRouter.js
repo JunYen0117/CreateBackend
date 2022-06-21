@@ -8,26 +8,52 @@ router.get('/', async (req, res, next) => {
   let page = req.query.page || 1;
 
   // 1. 取得 ?page 的值，目前頁數
-  console.log('current page:', page);
+  console.log('current page : ', page);
+  
+  // 預設值 -1
+  req.query.classificationId = req.query.classificationId || -1;
+
+  // 設定預設值，取得總筆數使用
+  let sql = '';
+  let products = [];
 
   // 2. 取得目前的總筆數
-  const sql = 'SELECT product.id, product.product_name, product.price, product.image, vendor.business_name FROM product JOIN vendor ON product.vendor_id = vendor.id';
-  let [products] = await pool.execute(sql);
-  const total = products.length;
-  console.log('total:', total);
+  if(Number(req.query.classificationId) === -1) {
+    sql = `SELECT product.id, product.product_name, product.price, product.image, vendor.business_name FROM product JOIN vendor ON product.vendor_id = vendor.id`;
+    [products] = await pool.execute(sql);
+  } else {
+    sql = `SELECT product.id, product.product_name, product.price, product.image, vendor.business_name FROM product JOIN vendor ON product.vendor_id = vendor.id WHERE product.classification_id = ?`;
+    [products] = await pool.execute(sql, [req.query.classificationId]);
+  }
 
   // 3. 計算總共有幾頁
-  const perPage = 20; // 每一頁有幾筆
-  const lastPage = Math.ceil(total / perPage); // 最後一頁是第幾頁
-  console.log('lastPage:', lastPage);
+  const total = products.length;
+  console.log('total : ', total);
+
+  // 設定每一頁要顯示幾筆
+  const perPage = 20; 
+  const lastPage = Math.ceil(total / perPage); 
+  console.log('lastPage : ', lastPage);
 
   // 4. 計算 offset 是多少 (計算要跳過幾筆)
   let offset = (page - 1) * perPage;
-  console.log('offset:', offset);
+  console.log('offset : ', offset);
+
+  // 設定預設值，取得這一頁的資料使用
+  let sqlPage = '';
+  let pageProducts = [];
 
   // 5. 取得這一頁的資料
-  const sqlPage = 'SELECT product.id, product.product_name, product.price, product.image, vendor.business_name FROM product JOIN vendor ON product.vendor_id = vendor.id LIMIT ? OFFSET ?';
-  let [pageProducts] = await pool.execute(sqlPage, [perPage, offset]);
+  if(Number(req.query.classificationId) === -1) {
+    sqlPage = `SELECT product.id, product.product_name, product.price, product.image, vendor.business_name FROM product JOIN vendor ON product.vendor_id = vendor.id LIMIT ? OFFSET ?`;
+    [pageProducts] = await pool.execute(sqlPage, [perPage, offset]);
+  } else {
+    sqlPage = `SELECT product.id, product.product_name, product.price, product.image, vendor.business_name FROM product JOIN vendor ON product.vendor_id = vendor.id WHERE product.classification_id = ? LIMIT ? OFFSET ?`;
+    [pageProducts] = await pool.execute(sqlPage, [req.query.classificationId, perPage, offset]);
+  }
+
+  console.log('sqlPage : ', sqlPage)
+  console.log('pageProducts : ', pageProducts.length)
 
   // 6. 回覆給前端
   res.json({
@@ -39,7 +65,6 @@ router.get('/', async (req, res, next) => {
     data: pageProducts,
   });
 });
-
 
 // --------- Sidebar ---------
 // localhost:3003/api/product/classification
@@ -56,45 +81,6 @@ router.get('/classification/:classificationId/category', async (req, res, next) 
   res.json(category);
 });
 // --------- Sidebar ---------
-
-// --------- Classification Pagination ---------
-// localhost:3003/api/product/classification/1
-router.get('/classification/:classificationId', async (req, res, next) => {
-
-  let page = req.query.page || 1;
-  console.log('classification current page:', page);
-  
-  const sql = 'SELECT classification.classification_name, category.category_name, product.id, product.category_id, product.product_name, product.price, product.image, vendor.business_name FROM product JOIN vendor ON product.vendor_id = vendor.id JOIN classification ON product.classification_id = classification.id JOIN category ON product.category_id = category.id WHERE product.classification_id = ?';
-  let [classification] = await pool.execute(sql, [req.params.classificationId]);
-
-  const total = classification.length;
-  console.log('classification total:', total);
-
-  const perPage = 20; 
-  const lastPage = Math.ceil(total / perPage); 
-  console.log('lastPage:', lastPage);
-
-  // 4. 計算 offset 是多少 (計算要跳過幾筆)
-  let offset = (page - 1) * perPage;
-  console.log('offset:', offset);
-
-  const sqlPage = 'SELECT classification.classification_name, category.category_name, product.id, product.category_id, product.product_name, product.price, product.image, vendor.business_name FROM product JOIN vendor ON product.vendor_id = vendor.id JOIN classification ON product.classification_id = classification.id JOIN category ON product.category_id = category.id WHERE product.classification_id = ? LIMIT ? OFFSET ?';
-  let [pageClassification] = await pool.execute(sqlPage, [req.params.classificationId, perPage, offset]);
-
-  // 6. 回覆給前端
-  res.json({
-    pagination: {
-      total,
-      lastPage,
-      page,
-    },
-    data: pageClassification,
-  });
-
-
-  // res.json(classification);
-});
-
 
 // localhost:3003/api/product/category/1
 router.get('/category/:categoryId', async (req, res, next) => {
