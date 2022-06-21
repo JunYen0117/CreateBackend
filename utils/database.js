@@ -11,6 +11,7 @@ let pool = mysql.createPool({
   connectionLimit: 10,
   // 讓mySQL2不要把date轉成js物件
   dateStrings: true,
-});
+})
+.promise();
 
-module.exports = pool.promise();
+module.exports = pool;
