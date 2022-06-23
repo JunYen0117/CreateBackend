@@ -7,15 +7,16 @@ router.get('/', async (req, res, next) => {
   console.log('進入頁面');
 
   // productsort 一開始是 undefined
-  let productsort = req.query.productSort; 
+  let productsort = req.query.productSort;
+
   // 預設按照 product.id 排序
-  if(productsort){
+  if (productsort) {
     productsort = req.query.productSort === 'ASC' ? 'ORDER BY product.price ASC' : 'ORDER BY product.price DESC';
   } else {
-    productsort = 'ORDER BY product.id ASC'
+    productsort = 'ORDER BY product.id ASC';
   }
 
-  console.log('productsort :', productsort)
+  console.log('productsort :', productsort);
 
   // 如果沒有宣告 page，則預設 page = 1
   const page = req.query.page || 1;
@@ -30,7 +31,7 @@ router.get('/', async (req, res, next) => {
   let [products] = await pool.execute(sql);
 
   // 取得目前的總筆數
-  if(classificationId !== -1) {
+  if (classificationId !== -1) {
     sql = `SELECT product.id, product.product_name, product.price, product.image, vendor.business_name FROM product JOIN vendor ON product.vendor_id = vendor.id WHERE product.classification_id = ?`;
     [products] = await pool.execute(sql, [classificationId]);
   }
@@ -41,7 +42,7 @@ router.get('/', async (req, res, next) => {
 
   // 設定每一頁要顯示幾筆
   const perPage = 20;
-  const lastPage = Math.ceil(total / perPage); 
+  const lastPage = Math.ceil(total / perPage);
   // console.log('lastPage : ', lastPage);
 
   // 計算 offset 是多少 (計算要跳過幾筆)
@@ -53,7 +54,7 @@ router.get('/', async (req, res, next) => {
   let [pageProducts] = await pool.execute(sqlPage, [perPage, offset]);
 
   // 取得這一頁的資料
-  if(classificationId !== -1) {
+  if (classificationId !== -1) {
     sqlPage = `SELECT product.id, product.product_name, product.price, product.image, vendor.business_name FROM product JOIN vendor ON product.vendor_id = vendor.id WHERE product.classification_id = ? ${productsort} LIMIT ? OFFSET ?`;
     [pageProducts] = await pool.execute(sqlPage, [classificationId, perPage, offset]);
   }
@@ -74,7 +75,8 @@ router.get('/', async (req, res, next) => {
 
 // localhost:3003/api/product/category/1
 router.get('/category/:categoryId', async (req, res, next) => {
-  const sql = 'SELECT product.id, product.product_name, product.price, product.image, vendor.business_name FROM product JOIN vendor ON product.vendor_id = vendor.id WHERE product.category_id = ?';
+  const sql =
+    'SELECT product.id, product.product_name, product.price, product.image, vendor.business_name FROM product JOIN vendor ON product.vendor_id = vendor.id WHERE product.category_id = ?';
   let [category] = await pool.execute(sql, [req.params.categoryId]);
   res.json(category);
 });
@@ -101,7 +103,7 @@ router.get('/search', async (req, res, next) => {
   let page = req.query.page || 1; // 如果沒有宣告 page，則預設 page = 1
   let minPrice = req.query.minPrice;
   let maxPrice = Number(req.query.maxPrice) === 0 ? 99999 : req.query.maxPrice;
- 
+
   console.log(req.query.minPrice);
   console.log(req.query.maxPrice);
   console.log('minPrice', minPrice);
@@ -115,7 +117,7 @@ router.get('/search', async (req, res, next) => {
 
   const perPage = 20;
 
-  const lastPage = Math.ceil(total / perPage); 
+  const lastPage = Math.ceil(total / perPage);
   console.log('current page', page);
   console.log('lastPage:', lastPage);
 
@@ -129,14 +131,12 @@ router.get('/search', async (req, res, next) => {
     pagination: {
       total,
       lastPage,
-      page
+      page,
     },
     data: pageProducts,
-  })
+  });
 });
 
 // --------- Search ---------
-
-
 
 module.exports = router;
