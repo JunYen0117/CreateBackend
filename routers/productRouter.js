@@ -4,10 +4,9 @@ const pool = require('../utils/database');
 
 // localhost:3003/api/product?page=1
 router.get('/', async (req, res, next) => {
-  console.log('進入頁面')
+  console.log('進入頁面');
   // productsort 一開始是 undefined
   let productsort = req.query.productSort; 
-
   // 預設按照 product.id 排序
   if(productsort){
     productsort = req.query.productSort === 'ASC' ? 'ORDER BY product.price ASC' : 'ORDER BY product.price DESC';
@@ -98,13 +97,43 @@ router.get('/classification/:classificationId/category', async (req, res, next) 
 // --------- Search ---------
 // localhost:3003/api/product/search
 router.get('/search', async (req, res, next) => {
-  const sql = 'SELECT * FROM product';
-  const [products] = await pool.execute(sql);
-  res.json(products);
+  let page = req.query.page || 1; // 如果沒有宣告 page，則預設 page = 1
+  let minPrice = req.query.minPrice;
+  let maxPrice = Number(req.query.maxPrice) === 0 ? 99999 : req.query.maxPrice;
+ 
+  console.log(req.query.minPrice);
+  console.log(req.query.maxPrice);
+  console.log('minPrice', minPrice);
+  console.log('maxPrice', maxPrice);
+
+  const sql = 'SELECT * FROM product WHERE product.price > ? AND product.price < ?';
+  const [products] = await pool.execute(sql, [minPrice, maxPrice]);
+
+  const total = products.length;
+  console.log('total:', total);
+
+  const perPage = 20;
+
+  const lastPage = Math.ceil(total / perPage); 
+  console.log('current page', page);
+  console.log('lastPage:', lastPage);
+
+  let offset = (page - 1) * perPage;
+  console.log('offset:', offset);
+
+  const sqlPage = 'SELECT * FROM product WHERE product.price > ? AND product.price < ?  LIMIT ? OFFSET ?';
+  const [pageProducts] = await pool.execute(sqlPage, [minPrice, maxPrice, perPage, offset]);
+
+  res.json({
+    pagination: {
+      total,
+      lastPage,
+      page
+    },
+    data: pageProducts,
+  })
 });
 
 // --------- Search ---------
-
-
 
 module.exports = router;
