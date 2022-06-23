@@ -5,12 +5,13 @@ const pool = require('../utils/database');
 // localhost:3003/api/productorder
 router.get('/', async (req, res, next) => {
   // 抓使用者id為1的訂單列表
-  const sql2 = 'SELECT * FROM customer_order';
+  const sql2 = 'SELECT * FROM customer_order WHERE customer_order.customer_id = 1'; //5.6訂單
 
   
   // 抓使用者id為1的訂單總數
   let [productorder] = await pool.execute(sql2);
   let total = productorder.length;
+  console.log(total);
 
   
   // id為1的分別買了哪些東西 幾樣商品 product_id
