@@ -6,7 +6,7 @@ const pool = require('../utils/database');
 router.get('/', async (req, res, next) => {
   console.log('進入頁面');
   // productsort 一開始是 undefined
-  let productsort = req.query.productSort; 
+  let productsort = req.query.productSort;
   // 預設按照 product.id 排序
   if(productsort){
     productsort = req.query.productSort === 'ASC' ? 'ORDER BY product.price ASC' : 'ORDER BY product.price DESC';
