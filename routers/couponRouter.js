@@ -9,16 +9,17 @@ router.get('/', async (req, res, next) => {
   res.json(couponList);
 });
 
-router.get('/:couponId', async (req, res, next) => {
+router.get('/:couponNum', async (req, res, next) => {
   // 取得網址上的參數 req.params
-  // req.params.couponId
+  // req.params.couponNum
   console.log('get coupon by id', req.params);
 
   let page = req.query.page || 1;
   console.log('current page', page);
 
   // 2. 取得目前的總筆數
-  let [allResults] = await pool.execute('SELECT * FROM coupon WHERE id = ?', [req.params.couponId]);
+  // (這邊可能要改寫一下， 優惠券編碼是不需要做分頁的)
+  let [allResults] = await pool.execute('SELECT * FROM coupon WHERE coupon_no = ?', [req.params.couponNum]);
   const total = allResults.length;
   console.log('total:', total);
 
@@ -34,7 +35,7 @@ router.get('/:couponId', async (req, res, next) => {
   console.log('offset:', offset);
 
   // 5. 取得這一頁的資料 select * from table limit ? offet ?
-  let [pageCoupons] = await pool.execute('SELECT * FROM coupon WHERE id = ? ORDER BY couponList DESC LIMIT ? OFFSET ?', [req.params.couponId, perPage, offset]);
+  let [pageCoupons] = await pool.execute('SELECT * FROM coupon WHERE coupon_no = ? ORDER BY id DESC LIMIT ? OFFSET ?', [req.params.couponNum, perPage, offset]);
 
   // 6. 回覆給前端
   res.json({
