@@ -5,7 +5,6 @@ const pool = require('../utils/database');
 // localhost:3003/api/product?page=1
 router.get('/', async (req, res, next) => {
   console.log('進入頁面');
-
   // productsort 一開始是 undefined
   let productsort = req.query.productSort;
 
@@ -135,8 +134,8 @@ router.get('/search', async (req, res, next) => {
     },
     data: pageProducts,
   });
+  
 });
-
 // --------- Search ---------
 
 module.exports = router;

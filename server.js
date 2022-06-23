@@ -28,7 +28,8 @@ app.use('/images/product', express.static(path.join(__dirname, 'public', 'img', 
 const productRouter = require('./routers/productRouter')
 app.use('/api/product', productRouter);
 
-
+const productDetailRouter = require('./routers/productDetailRouter')
+app.use('/api/product/detail', productDetailRouter);
 
 app.use((req, res, next) => {
   res.status(404).send('404 not found');
