@@ -60,31 +60,25 @@ router.get('/', async (req, res, next) => {
 
 router.get('/:orderId', async (req, res, next) => {
   const sql2 =
-    'SELECT customer_order_detail.order_id, customer_order_detail.price, customer_order_detail.amount, customer_order_detail.subtotal, product.product_name, product.product_num, vendor.business_name FROM customer_order_detail JOIN product ON customer_order_detail.product_id = product.id JOIN vendor ON customer_order_detail.vendor_id = vendor.id WHERE order_id =1 ';
+    'SELECT customer_order_detail.order_id, customer_order_detail.price, customer_order_detail.amount, customer_order_detail.subtotal, product.product_name, product.product_num, vendor.business_name FROM customer_order_detail JOIN product ON customer_order_detail.product_id = product.id JOIN vendor ON customer_order_detail.vendor_id = vendor.id WHERE order_id =5 ';
 
   // 取得商品數量
   let [productdetail] = await pool.execute(sql2);
   let total = productdetail;
 
-  
-  // let totaldetail = [];
-  // for (let i = 0; i <= total.length; i++) {
-  //   totaldetail.push(total[i]);
+  // console.log(total)
 
-  //   detaildata = {
-  //     orderid: totaldetail[i].order_id,
-  //     businessname: totaldetail[i].business_name,
-  //     productnum: totaldetail[i].product_num,
-  //     productname: totaldetail[i].product_name,
-  //     price: totaldetail[i].price,
-  //     amount: totaldetail[i].amount,
-  //     subtotal: totaldetail[i].subtotal,
-  //   };
-  //   detailarr = [...totaldetail, detaildata];
-  // }
-  // console.log(detailarr);
+  // 抓總金額
+  let result = 0;
+  for (let i = 0; i < total.length; i++) {
+    result = result + total[i].subtotal;
+  }
+  // console.log(result);
 
-  res.json(total);
+  res.json({
+    total,
+    result,
+  });
 });
 
 // res.json({
