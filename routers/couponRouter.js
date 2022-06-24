@@ -5,7 +5,7 @@ const pool = require('../utils/database');
 // localhost:3003/api/coupon
 router.get('/', async (req, res, next) => {
   console.log('優惠券列表');
-  let [couponList] = await pool.execute('SELECT * FROM coupon');
+  let [couponList,fields] = await pool.execute('SELECT * FROM coupon');
   res.json(couponList);
 });
 
