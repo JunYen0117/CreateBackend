@@ -29,7 +29,7 @@ const productRouter = require('./routers/productRouter')
 app.use('/api/product', productRouter);
 
 const productOrderRouter = require('./routers/productOrderRouter')
-app.use('/api/productorder', productOrderRouter)
+app.use('/api/productorder', productOrderRouter);
 
 
 app.use((req, res, next) => {

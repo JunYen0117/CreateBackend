@@ -5,7 +5,7 @@ const pool = require('../utils/database');
 // localhost:3003/api/productorder
 router.get('/', async (req, res, next) => {
   // 抓使用者id為1的訂單列表
-  const sql2 = 'SELECT * FROM customer_order WHERE customer_order.customer_id = 1'; //5.6訂單
+  const sql2 = 'SELECT * FROM customer_order WHERE customer_order.customer_id = 2'; //5.6訂單
 
   // 抓使用者id為1的訂單總數
   let [productorder] = await pool.execute(sql2);
@@ -45,7 +45,7 @@ router.get('/', async (req, res, next) => {
     }
     // console.log(result);
     //mydata = { orderid: 1 , totalsub: 總金額 }
-    mydata = { orderid: totaldata[i].product[0].order_id, totalsub: result, orderdate: orderDate[i]};
+    mydata = { orderid: totaldata[i].product[0].order_id, totalsub: result, orderdate: orderDate[i] };
     totalarr = [...totalarr, mydata];
   }
   // console.log(totalarr);
@@ -54,22 +54,41 @@ router.get('/', async (req, res, next) => {
   });
 });
 
+
+// ======================== OrderCancel ==============================
+
+// TODO:  改變customer_order_detail 的 valid
+
+// localhost:3003/api/productorder/:valid
+
+router.get('/:orderId/:valid', async (req, res, next) => {
+  const sql3 = 'UPDATE customer_order SET valid = 0 WHERE id = ?';
+
+  //console.log(req.params.orderId)
+ 
+  let [ordervalid] = await pool.execute(sql3, [req.params.orderId]);
+  let valid = ordervalid;
+
+  res.json({
+    valid,
+  });
+});
+
 // ======================== detail ==============================
 
-// TODO:  抓 id, vendor, productnum, product_name, price, account, total, valid
+// TODO:  抓 id, vendor, productnum, product_name, price, account, total
 
 // localhost:3003/api/productorder/:orderID
 router.get('/:orderId', async (req, res, next) => {
-
   // console.log('orderId', req.params.orderId)
   const sql2 =
-    'SELECT customer_order_detail.order_id, customer_order_detail.price, customer_order_detail.amount, customer_order_detail.subtotal, customer_order_detail.valid, product.product_name, product.product_num, vendor.business_name FROM customer_order_detail JOIN product ON customer_order_detail.product_id = product.id JOIN vendor ON customer_order_detail.vendor_id = vendor.id WHERE order_id = ?';
+    'SELECT customer_order_detail.order_id, customer_order_detail.price, customer_order_detail.amount, customer_order_detail.subtotal, product.product_name, product.product_num, vendor.business_name FROM customer_order_detail JOIN product ON customer_order_detail.product_id = product.id JOIN vendor ON customer_order_detail.vendor_id = vendor.id WHERE order_id = ?';
 
-  // 取得商品數量[req.params.orderId] 
+  // 取得商品數量[req.params.orderId]
   let [productdetail] = await pool.execute(sql2, [req.params.orderId]);
   let total = productdetail;
 
-  console.log(total)
+  // console.log(total);
 
   // 抓總金額
   let result = 0;
