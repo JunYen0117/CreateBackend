@@ -5,7 +5,7 @@ const pool = require('../utils/database');
 // localhost:3003/api/productorder
 router.get('/', async (req, res, next) => {
   // 抓使用者id為1的訂單列表
-  const sql2 = 'SELECT * FROM customer_order WHERE customer_order.customer_id = 2'; //5.6訂單
+  const sql2 = 'SELECT * FROM customer_order WHERE customer_order.customer_id = 2'; //消費者寫死 
 
   // 抓使用者id為1的訂單總數
   let [productorder] = await pool.execute(sql2);
@@ -17,7 +17,7 @@ router.get('/', async (req, res, next) => {
     return;
   });
   // console.log(orderId);
-  // 2筆訂單 [5,6]cd
+  // 2筆訂單 [5,6]
 
   //訂單內容的detail
   let totaldata = [];
@@ -73,6 +73,8 @@ router.get('/:orderId/:valid', async (req, res, next) => {
     valid,
   });
 });
+
+
 
 // ======================== detail ==============================
 
