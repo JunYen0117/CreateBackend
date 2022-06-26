@@ -28,6 +28,12 @@ app.use('/images/product', express.static(path.join(__dirname, 'public', 'img', 
 const productRouter = require('./routers/productRouter')
 app.use('/api/product', productRouter);
 
+const courseRouter = require('./routers/courseRouter')
+app.use('/api/course', courseRouter);
+
+const exhibitionRouter = require('./routers/exhibitionRouter')
+app.use('/api/exhibitionexplore', exhibitionRouter);
+
 
 
 app.use((req, res, next) => {
