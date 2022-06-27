@@ -32,7 +32,7 @@ const courseRouter = require('./routers/courseRouter')
 app.use('/api/course', courseRouter);
 
 const exhibitionRouter = require('./routers/exhibitionRouter')
-app.use('/api/exhibitionexplore', exhibitionRouter);
+app.use('/api/exhibition', exhibitionRouter);
 
 
 

@@ -7,10 +7,16 @@ router.get('/', async (req, res, next) => {
   const sql = 'SELECT exhibition.id, exhibition.exhibition_name, exhibition.city, exhibition.longitude,exhibition.latitude,exhibition.exhibition_intro,exhibition.exhibition_price,exhibition.start_date,exhibition.end_date,exhibition_img.exhibition_img FROM exhibition JOIN exhibition_img ON exhibition_img.exhibition_id = exhibition.id AND exhibition_img.img_main=1'
   
 
-  let [course] = await pool.execute(sql);
+  let [exhibition] = await pool.execute(sql);
 
-  res.json(course);
+  res.json(exhibition);
  
+});
+
+router.get('/:exhibitionId', async (req, res, next) => {
+  const sql = 'SELECT * FROM exhibition  WHERE exhibition.id = ?'
+  let [exhibition] = await pool.execute(sql, [req.params.exhibitionId]);
+  res.json(exhibition);
 });
 
 // // localhost:3003/api/product/classification
