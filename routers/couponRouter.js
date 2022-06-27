@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../utils/database');
 
-// localhost:3003/api/coupon?page=1
+// localhost:3003/api/coupons?page=1
 router.get('/', async (req, res, next) => {
   console.log('優惠券列表');
 
