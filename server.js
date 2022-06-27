@@ -31,6 +31,14 @@ app.use('/api/product', productRouter);
 const productOrderRouter = require('./routers/productOrderRouter')
 app.use('/api/productorder', productOrderRouter);
 
+const poCancelRouter = require('./routers/poCancelRouter')
+app.use('/api/pocancel', poCancelRouter);
+
+const poShippedRouter = require('./routers/poShippedRouter')
+app.use('/api/poshipped', poShippedRouter);
+
+
+
 
 app.use((req, res, next) => {
   res.status(404).send('404 not found');

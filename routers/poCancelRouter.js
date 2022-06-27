@@ -2,14 +2,15 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../utils/database');
 
-// localhost:3003/api/productorder
+// localhost:3003/api/poCancel
 router.get('/', async (req, res, next) => {
   // 抓使用者id為1的訂單列表
-  const sql2 = 'SELECT * FROM customer_order WHERE customer_order.customer_id = 1 AND valid = 1 '; //消費者寫死 
+  const sql2 = 'SELECT * FROM customer_order WHERE customer_order.customer_id = 1 AND valid= 0'; 
+  //消費者目前寫死 valid等於0
 
   // 抓使用者id為1的訂單總數
   let [productorder] = await pool.execute(sql2);
-  // console.log(productorder);
+  // console.log(productorder)
   let orderId = [];
   let orderDate = [];
   productorder.map((v) => {
@@ -17,10 +18,11 @@ router.get('/', async (req, res, next) => {
     orderDate.push(v.order_date);
     return;
   });
-  // console.log(orderId);
-  // 2筆訂單 [5,6]
+  // console.log(productorder)
+  // console.log(orderId)
+  // => 5 (valid=0)
 
-  //訂單內容的detail
+  // 訂單內容的detail
   let totaldata = [];
   for (let i = 0; i < orderId.length; i++) {
     // console.log(orderDate[i]);
@@ -28,16 +30,16 @@ router.get('/', async (req, res, next) => {
     totaldata = [...totaldata, { product }];
     // console.log(product);
   }
-  console.log(totaldata)
+  // console.log(totaldata)
 
   // 抓總金額
-  let totalarr = [];
+  let arrcancel = [];
   let mydata = {};
   // i -> 訂單總數
   for (let i = 0; i < totaldata.length; i++) {
     // [{ [0], [1], [2] } --> 3個訂單
 
-    // console.log(totaldata[i].product.length)
+    // console.log(totaldata[i].product.length);
     // j -> 訂單內的商品總數 （第幾個商品）
     let result = 0;
     for (let j = 0; j < totaldata[i].product.length; j++) {
@@ -45,43 +47,21 @@ router.get('/', async (req, res, next) => {
       result = result + totaldata[i].product[j].subtotal;
     }
     // console.log(result);
-    //mydata = { orderid: 1 , totalsub: 總金額 }
+    // mydata = { orderid: 1 , totalsub: 總金額 }
     mydata = { orderid: totaldata[i].product[0].order_id, totalsub: result, orderdate: orderDate[i] };
-    totalarr = [...totalarr, mydata];
+    arrcancel = [...arrcancel, mydata];
   }
-  // console.log(totalarr);
+  // console.log(arrcancel);
   res.json({
-    totalarr: totalarr,
+    arrcancel: arrcancel,
   });
 });
-
-
-// ======================== OrderCancel ==============================
-
-// TODO:  改變customer_order_detail 的 valid
-
-// localhost:3003/api/productorder/:valid
-
-router.get('/:orderId/:valid', async (req, res, next) => {
-  const sql3 = 'UPDATE customer_order SET valid = 0 WHERE id = ?';
-
-  //console.log(req.params.orderId)
- 
-  let [ordervalid] = await pool.execute(sql3, [req.params.orderId]);
-  let valid = ordervalid;
-
-  res.json({
-    valid,
-  });
-});
-
-
 
 // ======================== detail ==============================
 
 // TODO:  抓 id, vendor, productnum, product_name, price, account, total
 
-// localhost:3003/api/productorder/:orderID
+// localhost:3003/api/poCancel/:orderID
 router.get('/:orderId', async (req, res, next) => {
   // console.log('orderId', req.params.orderId)
   const sql2 =
@@ -106,6 +86,5 @@ router.get('/:orderId', async (req, res, next) => {
     result,
   });
 });
-
 
 module.exports = router;

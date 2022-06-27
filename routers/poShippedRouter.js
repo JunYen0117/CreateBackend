@@ -2,10 +2,11 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../utils/database');
 
-// localhost:3003/api/productorder
+// localhost:3003/api/poshipped
 router.get('/', async (req, res, next) => {
   // 抓使用者id為1的訂單列表
-  const sql2 = 'SELECT * FROM customer_order WHERE customer_order.customer_id = 1 AND valid = 1 '; //消費者寫死 
+  const sql2 = 'SELECT * FROM customer_order WHERE customer_order.customer_id = 1 AND valid = 2 ';
+  // valid = 2 notshipped valid= 3 shipped 
 
   // 抓使用者id為1的訂單總數
   let [productorder] = await pool.execute(sql2);
@@ -31,7 +32,7 @@ router.get('/', async (req, res, next) => {
   console.log(totaldata)
 
   // 抓總金額
-  let totalarr = [];
+  let arrshipped = [];
   let mydata = {};
   // i -> 訂單總數
   for (let i = 0; i < totaldata.length; i++) {
@@ -47,11 +48,11 @@ router.get('/', async (req, res, next) => {
     // console.log(result);
     //mydata = { orderid: 1 , totalsub: 總金額 }
     mydata = { orderid: totaldata[i].product[0].order_id, totalsub: result, orderdate: orderDate[i] };
-    totalarr = [...totalarr, mydata];
+    arrshipped = [...arrshipped, mydata];
   }
   // console.log(totalarr);
   res.json({
-    totalarr: totalarr,
+    arrshipped:arrshipped
   });
 });
 
@@ -60,7 +61,7 @@ router.get('/', async (req, res, next) => {
 
 // TODO:  改變customer_order_detail 的 valid
 
-// localhost:3003/api/productorder/:valid
+// localhost:3003/api/poshipped/:orderId/:valid
 
 router.get('/:orderId/:valid', async (req, res, next) => {
   const sql3 = 'UPDATE customer_order SET valid = 0 WHERE id = ?';
@@ -81,7 +82,7 @@ router.get('/:orderId/:valid', async (req, res, next) => {
 
 // TODO:  抓 id, vendor, productnum, product_name, price, account, total
 
-// localhost:3003/api/productorder/:orderID
+// localhost:3003/api/poshipped/:orderID
 router.get('/:orderId', async (req, res, next) => {
   // console.log('orderId', req.params.orderId)
   const sql2 =
