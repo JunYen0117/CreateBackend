@@ -108,8 +108,6 @@ router.get('/search', async (req, res, next) => {
   console.log('minPrice', minPrice);
   console.log('maxPrice', maxPrice);
 
-// product.id, product.product_name, product.price, product.image, vendor.business_name
-
   const sql = 'SELECT product.id, product.product_name, product.price, product.image, vendor.business_name FROM product JOIN vendor ON product.vendor_id = vendor.id WHERE product.price > ? AND product.price < ?';
   const [products] = await pool.execute(sql, [minPrice, maxPrice]);
 
@@ -125,7 +123,7 @@ router.get('/search', async (req, res, next) => {
   let offset = (page - 1) * perPage;
   console.log('offset:', offset);
 
-  const sqlPage = 'SELECT product.id, product.product_name, product.price, product.image, vendor.business_name FROM product JOIN vendor ON product.vendor_id = vendor.id WHERE product.price > ? AND product.price < ? LIMIT ? OFFSET ?';
+  const sqlPage = 'SELECT product.id, product.product_name, product.price, product.image, vendor.business_name FROM product JOIN vendor ON product.vendor_id = vendor.id WHERE product.price > ? AND product.price < ?  LIMIT ? OFFSET ?';
   const [pageProducts] = await pool.execute(sqlPage, [minPrice, maxPrice, perPage, offset]);
 
   res.json({
