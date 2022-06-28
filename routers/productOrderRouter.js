@@ -56,25 +56,6 @@ router.get('/', async (req, res, next) => {
 });
 
 
-// ======================== OrderCancel ==============================
-
-// TODO:  改變customer_order_detail 的 valid
-
-// localhost:3003/api/productorder/:valid
-
-router.get('/:orderId/:valid', async (req, res, next) => {
-  const sql3 = 'UPDATE customer_order SET valid = 0 WHERE id = ?';
-
-  //console.log(req.params.orderId)
- 
-  let [ordervalid] = await pool.execute(sql3, [req.params.orderId]);
-  let valid = ordervalid;
-
-  res.json({
-    valid,
-  });
-});
-
 
 
 // ======================== detail ==============================
