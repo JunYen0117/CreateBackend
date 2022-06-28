@@ -94,7 +94,7 @@ router.get('/classification/:classificationId/category', async (req, res, next) 
   const [category] = await pool.execute(sql, [req.params.classificationId]);
   res.json(category);
 });
-// --------- Sidebar ---------
+// --------- Sidebar --------
 
 // --------- Search ---------
 // localhost:3003/api/product/search
