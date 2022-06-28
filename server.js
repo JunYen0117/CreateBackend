@@ -31,7 +31,7 @@ app.use('/api/product', productRouter);
 const productDetailRouter = require('./routers/productDetailRouter');
 app.use('/api/product/detail', productDetailRouter);
 
-const cartRouter = require('./routers/cart');
+const cartRouter = require('./routers/cartRouter');
 app.use('/api/cart', cartRouter);
 
 app.use((req, res, next) => {
