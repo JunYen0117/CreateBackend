@@ -81,9 +81,19 @@ router.get('/:orderId', async (req, res, next) => {
   }
   // console.log(result);
 
+  // TODO: 抓收件人資料 名字電話地址
+  let receiver = [];
+
+
+    let [receiverdata] = await pool.execute('SELECT customer.member_name, customer.phone, customer.address, customer_order.id FROM `customer` JOIN customer_order ON customer.id = customer_order.customer_id WHERE customer_order.id= ?', [req.params.orderId]);
+    receiver = receiverdata;
+    // console.log(receiver);
+  
+
   res.json({
     total,
     result,
+    receiver:receiver
   });
 });
 
