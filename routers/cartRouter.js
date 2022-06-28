@@ -6,7 +6,6 @@ const pool = require('../utils/database');
 router.post('/orderDetails', async (req, res, next) => {
   // shippingData
   const shippingData = req.body.shippingData;
-  // console.log('shippingData : ', shippingData);
 
   // 收件資料
   const recipient = shippingData.recipient;
@@ -22,7 +21,8 @@ router.post('/orderDetails', async (req, res, next) => {
   const date = new Date();  
 
   // customer_order
-  const sql = 'INSERT INTO customer_order (customer_id, status, recipient, recipient_email, tel, address, order_date, total, valid) VALUES (1, 1, ?, ?, ?, ?, ?, ?, 1)';
+  // customer_id 待修改 -> 會員id
+  const sql = 'INSERT INTO customer_order (customer_id, recipient, recipient_email, tel, address, order_date, total, valid) VALUES (1, ?, ?, ?, ?, ?, ?, 2)';
   const [order] = await pool.execute(sql, [recipient, recipientEmail, tel, address, date, total]);
 
   // customer_order_detail
@@ -33,7 +33,7 @@ router.post('/orderDetails', async (req, res, next) => {
     let [orderProduct] = await pool.execute(sqlDetail, [orderId, checkList[i].id, checkList[i].vendor_id, checkList[i].price, checkList[i].quantity, subtotal]);
   }
 
-  res.json({message: '歡迎下次再次光臨'})
+  res.json({message: '歡迎下次光臨'});
 })
 
 
