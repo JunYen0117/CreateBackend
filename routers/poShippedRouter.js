@@ -28,7 +28,7 @@ router.get('/', async (req, res, next) => {
     totaldata = [...totaldata, { product }];
     // console.log(product);
   }
-  console.log(totaldata)
+  // console.log(totaldata)
 
   // 抓總金額
   let totalarr = [];
