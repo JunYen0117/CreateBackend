@@ -23,6 +23,8 @@ app.get('/', (req, res, next) => {
 // 商品圖片
 // http://localhost:3003/images/product/1_1咖啡壺.jpg
 app.use('/images/product', express.static(path.join(__dirname, 'public', 'img', 'products')));
+//展覽圖片
+app.use('/images/exhibition', express.static(path.join(__dirname, 'public', 'img', 'exhibition')));
 
 // Routers
 const productRouter = require('./routers/productRouter')
