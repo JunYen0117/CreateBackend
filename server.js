@@ -36,6 +36,9 @@ app.use('/api/course', courseRouter);
 const exhibitionRouter = require('./routers/exhibitionRouter')
 app.use('/api/exhibition', exhibitionRouter);
 
+const activitypaymentRouter = require('./routers/activitypaymentRouter')
+app.use('/api/activitypayment', activitypaymentRouter);
+
 
 
 app.use((req, res, next) => {
