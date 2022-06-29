@@ -40,7 +40,8 @@ app.use('/api/ponotshipped', poNotShippedRouter);
 const poShippedRouter = require('./routers/poShippedRouter')
 app.use('/api/poshipped', poShippedRouter);
 
-const Fav = require ()
+const favProductRouter = require ('./routers/favProductRouter')
+app.use('/api/favproduct', favProductRouter);
 
 
 
