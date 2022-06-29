@@ -3,8 +3,23 @@ const app = express();
 require('dotenv').config();
 const path = require('path');
 const cors = require('cors');
+const expressSession = require('express-session');
 
+let FileStore = require('session-file-store')(expressSession);
 let port = process.env.SERVER_PORT || 3003;
+
+
+// 啟用 session，會存到CreateBackEnd 的外面
+app.use(
+  expressSession({
+    store: new FileStore({
+      path: path.join(__dirname, '..', 'sessions'), //session會存到CreateBackEnd 的外面
+    }),
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+  })
+);
 
 app.use(
   cors({

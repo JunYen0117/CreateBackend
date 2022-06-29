@@ -9,3 +9,6 @@ MFEE25大專-創意迴廊-後端
 5. 安裝 node_modules：`npm install`
 6. 啟動伺服器：`npm run dev`
 7. 開啟 http://127.0.0.1:3003 or http://localhost:3003
+
+## 俊彥補充：
+1. session會建立在專案之外，也就是CreateBackend資料夾外面
