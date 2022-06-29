@@ -9,9 +9,6 @@ const { count } = require('console');
 
 
 router.post('/', async (req, res, next) => {
-    // console.log('什麼是req:'+req);
-    // console.log('收到帳號資料:'+req.body.account);
-    // console.log('收到密碼資料:'+req.body.password);
 
     let [customers] = await pool.execute('SELECT * FROM customer WHERE account = ?', [req.body.account]);
 
@@ -34,7 +31,7 @@ router.post('/', async (req, res, next) => {
     req.session.customer = sessionData;
 
 
-    res.json({ code: 0, result: '東西有從後台打回前台', customer: customer});
+    res.json({ code: 0, result: '東西有從後台打回前台', sessionData: sessionData});
 });
 
 
