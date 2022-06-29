@@ -6,6 +6,18 @@ const pool = require('../utils/database');
 router.post('/orderDetails', async (req, res, next) => {
   // shippingData
   const shippingData = req.body.shippingData;
+  
+  // 運送方式
+  let delivery = shippingData.delivery;
+  if (Number(delivery) === 1) {
+    delivery = '超商取貨';
+  } else if (Number(delivery) === 2) {
+    delivery = '宅配到府';
+  } else if (Number(delivery) === 3) {
+    delivery = '門市自取';
+  } else {
+    delivery = '未選擇';
+  }
 
   // 收件資料
   const recipient = shippingData.recipient;
@@ -22,8 +34,8 @@ router.post('/orderDetails', async (req, res, next) => {
 
   // customer_order
   // customer_id 待修改 -> 會員id
-  const sql = 'INSERT INTO customer_order (customer_id, recipient, recipient_email, tel, address, order_date, total, valid) VALUES (1, ?, ?, ?, ?, ?, ?, 2)';
-  const [order] = await pool.execute(sql, [recipient, recipientEmail, tel, address, date, total]);
+  const sql = 'INSERT INTO customer_order (customer_id, recipient, recipient_email, tel, address, order_date, delivery, total, valid) VALUES (1, ?, ?, ?, ?, ?, ?, ?, 2)';
+  const [order] = await pool.execute(sql, [recipient, recipientEmail, tel, address, date, delivery, total]);
 
   // customer_order_detail
   const orderId = order.insertId;
