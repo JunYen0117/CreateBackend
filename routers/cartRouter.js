@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const pool = require('../utils/database');
-const stripe = require("stripe")('sk_test_4eC39HqLyjWDarjtT1zdp7dc');
+const stripe = require("stripe")(process.env.STRIPE_SECRET);
 
 // localhost:3003/api/cart/orderDetails
 router.post('/orderDetails', async (req, res, next) => {
