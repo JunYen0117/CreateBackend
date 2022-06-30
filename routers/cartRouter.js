@@ -64,7 +64,4 @@ router.post("/create-payment-intent", async (req, res, next) => {
   });
 });
 
-
-
-
 module.exports = router;
