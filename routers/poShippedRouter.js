@@ -2,6 +2,27 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../utils/database');
 
+
+// ======================== OrderFinish==============================
+
+// TODO:  改變customer_order 的 valid 改為1 (已完成)
+
+// localhost:3003/api/poshipped/:orderId/:valid
+
+router.get('/:orderId/:valid', async (req, res, next) => {
+  const sql3 = 'UPDATE customer_order SET valid = 1 WHERE id = ?';
+
+  //console.log(req.params.orderId)
+ 
+  let [ordervalid] = await pool.execute(sql3, [req.params.orderId]);
+  let valid = ordervalid;
+
+  res.json({
+    valid,
+  });
+});
+
+
 // localhost:3003/api/poshipped
 router.get('/', async (req, res, next) => {
   // 抓使用者id為1的訂單列表

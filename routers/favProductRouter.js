@@ -37,6 +37,7 @@ router.get('/', async (req, res, next) => {
   const sql2 =
     'SELECT collect_product.*, product.product_name, product.price, product.image FROM collect_product JOIN product ON collect_product.product_id = product.id WHERE collect_product.customer_id = 1';
 
+  
   let [product] = await pool.execute(sql2);
 
   res.json(product);
