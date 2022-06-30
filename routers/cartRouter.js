@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const pool = require('../utils/database');
+const stripe = require("stripe")('sk_test_4eC39HqLyjWDarjtT1zdp7dc');
 
 // localhost:3003/api/cart/orderDetails
 router.post('/orderDetails', async (req, res, next) => {
@@ -47,6 +48,23 @@ router.post('/orderDetails', async (req, res, next) => {
 
   res.json({message: '歡迎下次光臨'});
 })
+
+// localhost:3003/api/cart/create-payment-intent
+router.post("/create-payment-intent", async (req, res, next) => {
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: 1099,
+    currency: "USD",
+    automatic_payment_methods: {
+      enabled: true,
+    },
+  });
+
+  res.json({
+    clientSecret: paymentIntent.client_secret,
+  });
+});
+
+
 
 
 module.exports = router;
