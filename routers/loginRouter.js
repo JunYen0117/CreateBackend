@@ -28,15 +28,8 @@ router.post('/', async (req, res, next) => {
         return res.status(400).json({ code: 3004, error: '帳號或密碼錯誤' });
     }
 
-    // // 如果有，確認密碼
-    // let passwordCompareResult = await bcrypt.compare(req.body.password, member.password);
-    // if (passwordCompareResult === false) {
-    //     // 如果密碼不符合，回覆登入錯誤
-    //     return res.status(400).json({ code: 3004, error: '帳號或密碼錯誤' });
-    // }
 
-
-    res.json({ code: 0, result: '東西有從後台打回前台' });
+    res.json({ code: 0, result: `東西有從後台打回前台:`+{customer} });
 });
 
 
