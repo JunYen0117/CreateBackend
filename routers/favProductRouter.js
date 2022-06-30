@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../utils/database');
 
-// Delete 收藏ㄆㄧㄣ
+// Delete 收藏品
 // localhost:3003/api/favproduct/del/:userId/:prdId
 router.get('/del/:userId/:prdId', async (req, res, next) => {
   const sql2 = 'DELETE FROM collect_product WHERE customer_id = ? AND product_id = ?';
@@ -25,7 +25,7 @@ router.get('/add/:userId/:prdId', async (req, res, next) => {
 // localhost:3003/api/favproduct/:userId
 router.get('/:userId', async (req, res, next) => {
   const sql2 =
-    'SELECT collect_product.*, product.product_name, product.price, product.image FROM collect_product JOIN product ON collect_product.product_id = product.id WHERE collect_product.customer_id = ?';
+    'SELECT collect_product.*, product.product_name, product.price, product.image FROM collect_product JOIN product ON collect_product.product_id = product.id WHERE collect_product.customer_id = ? ORDER BY collect_product.id DESC';
 
   let [product] = await pool.execute(sql2, [req.params.userId]);
 
