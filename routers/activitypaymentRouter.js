@@ -4,7 +4,7 @@ const pool = require('../utils/database');
 
 // localhost:3003/api/product
 router.post('/', async (req, res, next) => {
-    console.log('data:', req.body);
+    // console.log('data:', req.body);
     // data: {
     //   order: {
     //     exhibition_id: '1',
