@@ -12,3 +12,4 @@ MFEE25大專-創意迴廊-後端
 
 ## 俊彥補充：
 1. session會建立在專案之外，也就是CreateBackend資料夾外面
+2. 在.env檔案裡，設定 SESSION_SECRET = 12345
