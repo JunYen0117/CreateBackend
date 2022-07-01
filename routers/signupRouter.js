@@ -17,18 +17,12 @@ const registerRules = [
     .withMessage('密碼驗證不一致'),
 ];
 
-
-// 1. 設定驗證規則 body()
-// 2. 把 前端的req 拿來驗證 validationResult(req) => 空的 or 有資料(驗證失敗)
-// 3. 驗證失敗 把 錯誤訊息 取出來 回給 前端 res.json(error)
-
-
 router.post('/', registerRules, async (req, res, next) => {
   console.log('register body:', req.body); //req.body 前端送過來的資料
 
   // 拿到驗證結果
   const validateResults = validationResult(req);
-  console.log('validateResults', validateResults);
+  console.log('validateResults:',validateResults);
   if (!validateResults.isEmpty()) {
     // 不是 empty --> 表示有驗證失敗的訊息
     let error = validateResults.array();
@@ -36,26 +30,38 @@ router.post('/', registerRules, async (req, res, next) => {
   }
 
   // // 確認 email 有沒有註冊過
-  // let [members] = await pool.execute('SELECT id, email FROM members WHERE email = ?', [req.body.email]);
-  // if (members.length !== 0) {
-  //   // 這個 email 有註冊過
-  //   return res.status(400).json({ code: 3002, error: '這個 email 已經註冊過' });
-  //   // 盡可能讓後端回覆的格式是一致的，如果無法完全一致，那至少要讓前端有判斷的依據。
-  //   // 做專案的時候，在專案開始前，可以先討論好要回覆的錯誤格式與代碼。
-  // }
+  const [members] = await pool.execute('SELECT * FROM customer WHERE account = ?', [req.body.account]);
+  console.log('members',members)
+  if (members.length !== 0) {
+    // 這個 email 有註冊過
+    return res.status(400).json({ code: 3011, error: '這個 email 已經註冊過' });
+  }
 
-  // // 密碼雜湊 hash
-  // let hashPassword = await bcrypt.hash(req.body.password, 10);
-
+  // 密碼雜湊 hash
+  const hashPassword = await bcrypt.hash(req.body.password, 10);
 
 
-  // // save to db // [ [{email: xx , password: xxx}],[fdfafa] ]  [ [ {第一筆資料},{第二筆資料} ] ,[亂碼] ]
+
+  // save to db // [ [{email: xx , password: xxx}],[fdfafa] ]  [ [ {第一筆資料},{第二筆資料} ] ,[亂碼] ]
   // // result = [{email: xx , password: xxx}]
-  // let [result] = await pool.execute('INSERT INTO members (email, password, name, photo) VALUES (?, ?, ?, ?)', [req.body.email, hashPassword, req.body.name, photo]);
+   const date=new Date();
+   let [result] = await pool.execute('INSERT INTO customer (member_name, account, password, gender, age, phone, address, valid, create_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [req.body.member_name, req.body.account, hashPassword, req.body.gender, req.body.age, req.body.phone, req.body.address, 1, date]);
   // console.log('insert result:', result);
 
+  let sessionData = { 
+    member_num: '', 
+    member_name: req.body.member_name, 
+    account: req.body.account, 
+    password: hashPassword,
+    gender: req.body.gender, 
+    age: req.body.age, 
+    phone: req.body.phone, 
+    address: req.body.address, 
+    create_time: date, 
+    valid: 1 };
+  req.session.customer = sessionData;
   // response
-  res.json({ code: 0, result: 'OK' });
+  res.json({ code: 0, result: '東西有從後台打回前台', sessionData: sessionData });
 });
 
 

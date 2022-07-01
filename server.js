@@ -46,7 +46,7 @@ app.use('/images/product', express.static(path.join(__dirname, 'public', 'img', 
 // const productRouter = require('./routers/productRouter')
 // app.use('/api/product', productRouter);
 
-const signupRouter = require('./routers/signupRouter')
+const signupRouter = require('./routers/signupRouter');
 app.use('/api/signup', signupRouter);
 
 const loginRouter = require('./routers/loginRouter')
