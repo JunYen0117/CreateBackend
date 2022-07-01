@@ -18,7 +18,28 @@ router.get('/', async (req, res, next) => {
   
     res.json(activity);
    
-  });
+});
+
+router.put('/state', async (req, res, next) => {
+  console.log('data:', req.body);
+  // data: { orderId: 4, changeState: 2 }
+  
+  //state 0 =已結束
+  //state 1 =已報名
+  //state 2 =已使用
+  // console.log('state', state);
+
+    const sql = 'UPDATE exhibition_order SET state = ? WHERE exhibition_order.id = ?'
+    
+  
+  
+    let [activity] = await pool.execute(sql, [req.body.changeState,req.body.orderId]);
+  
+    res.json({ code: 0, result: 'OK' });
+   
+});
+
+
 
   // UPDATE `exhibition_order` SET `state` = '0' WHERE `exhibition_order`.`id` = 7;
 module.exports = router;
