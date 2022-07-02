@@ -8,7 +8,6 @@ const expressSession = require('express-session');
 let FileStore = require('session-file-store')(expressSession);
 let port = process.env.SERVER_PORT || 3003;
 
-
 // 啟用 session，會存到CreateBackEnd 的外面
 app.use(
   expressSession({
@@ -46,11 +45,9 @@ app.use('/images/product', express.static(path.join(__dirname, 'public', 'img', 
 // const productRouter = require('./routers/productRouter')
 // app.use('/api/product', productRouter);
 
-const signupRouter = require('./routers/signupRouter');
-app.use('/api/signup', signupRouter);
-
-const loginRouter = require('./routers/loginRouter')
-app.use('/api/login', loginRouter);
+// 登入註冊
+const AuthRouter = require('./routers/authRouter');
+app.use('/api/auth', AuthRouter)
 
 const memberRouter = require('./routers/memberRouter');
 app.use('/api/member', memberRouter);
