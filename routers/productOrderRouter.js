@@ -289,7 +289,7 @@ router.get('/notshipped', async (req, res, next) => {
     // j -> 訂單內的商品總數 （第幾個商品）
     let result = 0;
     for (let j = 0; j < totaldata[i].product.length; j++) {
-      // console.log(totaldata[i].product[j]);
+      console.log(totaldata[i].product[j]);
       result = result + totaldata[i].product[j].subtotal;
     }
     // console.log(result);

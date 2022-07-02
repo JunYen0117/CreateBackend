@@ -61,12 +61,13 @@ router.get('/product/add/:userId/:prdId', async (req, res, next) => {
 
   let [data] = await pool.execute(sql2, [req.params.userId, req.params.prdId]); 
 
+  
   res.json({code: 0 , message: '加入成功'})
 });
 
-
+  
 // ====================== userId =========================
-
+  
 // localhost:3003/api/fav/activity/:userId
 router.get('/activity/:userId', async (req, res, next) => {
   const sql2 =
@@ -107,6 +108,8 @@ router.get('/activity', async (req, res, next) => {
 
   
   let [exhibition] = await pool.execute(sql2);
+
+
 
   res.json(exhibition);
 });
