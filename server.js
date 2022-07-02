@@ -28,9 +28,11 @@ app.use('/images/product', express.static(path.join(__dirname, 'public', 'img', 
 const productRouter = require('./routers/productRouter')
 app.use('/api/product', productRouter);
 
+//訂單
 const productOrderRouter = require('./routers/productOrderRouter')
 app.use('/api/productorder', productOrderRouter);
 
+//收藏
 const favRouter = require ('./routers/favRouter')
 app.use('/api/fav', favRouter);
 
