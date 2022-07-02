@@ -17,22 +17,22 @@ router.get('/available', async (req, res, next) => {
   console.log('撈出全部的優惠券:可領取的優惠券列表');
 
   let page = req.query.page || 1;
-  console.log('current page', page);
+  // console.log('current page', page);
 
-  let [availableList] = await pool.execute('SELECT * FROM coupon WHERE coupon.id NOT IN (SELECT coupon_id from coupon_take where customer_id=1) AND coupon_send_status=1;');
+  let [availableList] = await pool.execute('SELECT * FROM coupon WHERE id NOT IN  (SELECT coupon_id from coupon_take where customer_id=1) AND coupon_send_type=2;');
 
   const total = availableList.length;
-  console.log('total:', total);
+  // console.log('total:', total);
 
-  const perPage = 4; // 每一頁有幾筆
+  const perPage = 2; // 每一頁有幾筆
   const lastPage = Math.ceil(total / perPage);
-  console.log('lastPage:', lastPage);
+  // console.log('lastPage:', lastPage);
 
   let offset = (page - 1) * perPage;
-  console.log('offset:', offset);
+  // console.log('offset:', offset);
 
   let [pageAvailableList] = await pool.execute(
-    'SELECT * FROM coupon WHERE coupon.id NOT IN (SELECT coupon_id from coupon_take where customer_id=1) AND coupon_send_status=1 LIMIT ? OFFSET ?',
+    'SELECT * FROM coupon WHERE coupon.id NOT IN (SELECT coupon_id from coupon_take where customer_id=1) AND coupon_send_type=2 LIMIT ? OFFSET ?',
     [perPage, offset]
   );
 
@@ -47,7 +47,7 @@ router.get('/available', async (req, res, next) => {
     // 真正的資料
     availableList: pageAvailableList,
   });
-  console.log(availableList);
+  // console.log(availableList);
 });
 
 // 撈出全部使用者可使用的優惠券
@@ -56,18 +56,18 @@ router.get('/receive', async (req, res, next) => {
   console.log('使用者擁有的優惠券:可使用的優惠券列表');
 
   let receivePage = req.query.page || 1;
-  console.log('current receivePage', receivePage);
+  // console.log('current receivePage', receivePage);
 
   let [receiveList] = await pool.execute('SELECT * FROM coupon right JOIN coupon_take on coupon.id = coupon_id where customer_id=1 AND coupon_status=1;');
   const receiveTotal = receiveList.length;
-  console.log('receiveTotal:', receiveTotal);
+  // console.log('receiveTotal:', receiveTotal);
 
   const receivePerPage = 2; // 每一頁有幾筆
   const receiveLastPage = Math.ceil(receiveTotal / receivePerPage);
-  console.log('lastPage:', receiveLastPage);
+  // console.log('lastPage:', receiveLastPage);
 
   let receiveOffset = (receivePage - 1) * receivePerPage;
-  console.log('receiveOffset:', receiveOffset);
+  // console.log('receiveOffset:', receiveOffset);
 
   let [pageReceiveList] = await pool.execute('SELECT * FROM coupon right JOIN coupon_take on coupon.id = coupon_id where customer_id=1 AND coupon_status=1 LIMIT ? OFFSET ?', [
     receivePerPage,
@@ -85,7 +85,7 @@ router.get('/receive', async (req, res, next) => {
     // 真正的資料
     receiveList: pageReceiveList,
   });
-  console.log('receiveList:', receiveList);
+  // console.log('receiveList:', receiveList);
 });
 
 // 撈出全部使用者擁有的優惠券但已失效
@@ -94,18 +94,18 @@ router.get('/invalid', async (req, res, next) => {
   console.log('使用者擁有的優惠券但已失效：可使用的優惠券列表');
 
   let invalidPage = req.query.page || 1;
-  console.log('current invalidPage', invalidPage);
+  // console.log('current invalidPage', invalidPage);
 
   let [invalidList] = await pool.execute('SELECT * FROM coupon right JOIN coupon_take on coupon.id = coupon_id where customer_id=1 AND coupon_status=0;');
   const invalidTotal = invalidList.length;
 
   console.log('invalidTotal:', invalidTotal);
 
-  const invalidPerPage = 4; // 每一頁有幾筆
+  const invalidPerPage = 2; // 每一頁有幾筆
   const invalidLastPage = Math.ceil(invalidTotal / invalidPerPage);
   console.log('invalidLastPage:', invalidLastPage);
 
-  let invalidOffset = (invalidLastPage - 1) * invalidPerPage;
+  let invalidOffset = (invalidPage - 1) * invalidPerPage;
   console.log('invalidOffset:', invalidOffset);
 
   let [pageInvalidList] = await pool.execute('SELECT * FROM coupon right JOIN coupon_take on coupon.id = coupon_id where customer_id=1 AND coupon_status=0 LIMIT ? OFFSET ?', [
@@ -124,7 +124,7 @@ router.get('/invalid', async (req, res, next) => {
     // 真正的資料
     invalidList: pageInvalidList,
   });
-  console.log('invalidList:', invalidList);
+  // console.log('invalidList:', invalidList);
 });
 
 // Create coupon
@@ -142,7 +142,7 @@ router.get('/invalid', async (req, res, next) => {
 router.post('/insertCoupon', async (req, res, next) => {
   const date = new Date();
 
-console.log(req.body);
+// console.log(req.body);
   // 正式用版本--資料庫
   let [insertCoupon] = await pool.execute('INSERT INTO coupon_take (customer_id ,coupon_id,coupon_status,take_time) VALUE (?,?,?,?)', [
     req.body.customer_id,
@@ -151,7 +151,7 @@ console.log(req.body);
     date,
   ]);
 
-  let [updateCoupon] = await pool.execute('UPDATE coupon SET quota = quota-1 where id = ? AND quota>0', [req.body.coupon_id]);
+  let [updateCoupon] = await pool.execute('UPDATE coupon SET quota = quota-1, take_count = take_count+1  where id = ? AND quota>0', [req.body.coupon_id]);
 
   res.json({
     insertCoupon, // 領取的優惠券
