@@ -5,9 +5,10 @@ const path = require('path');
 const cors = require('cors');
 const expressSession = require('express-session');
 
-let FileStore = require('session-file-store')(expressSession);
 let port = process.env.SERVER_PORT || 3003;
 
+// 設定 session 要存在哪裡
+let FileStore = require('session-file-store')(expressSession);
 // 啟用 session，會存到CreateBackEnd 的外面
 app.use(
   expressSession({
@@ -37,18 +38,17 @@ app.get('/', (req, res, next) => {
   res.send('首頁');
 });
 
+// 會員大頭貼
+// http://localhost:3003/images/members/1655005255714.jpg
+app.use('/images/members', express.static(path.join(__dirname, 'public', 'members')));
 // 商品圖片
 // http://localhost:3003/images/product/1_1咖啡壺.jpg
 app.use('/images/product', express.static(path.join(__dirname, 'public', 'img', 'products')));
 
-// Routers
-// const productRouter = require('./routers/productRouter')
-// app.use('/api/product', productRouter);
-
 // 登入註冊
 const AuthRouter = require('./routers/authRouter');
 app.use('/api/auth', AuthRouter)
-
+// 會員
 const memberRouter = require('./routers/memberRouter');
 app.use('/api/member', memberRouter);
 

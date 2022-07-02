@@ -6,8 +6,6 @@ const pool = require('../utils/database.js');
 const { body, validationResult } = require('express-validator');
 // 密碼雜湊
 const bcrypt = require('bcrypt');
-// 內建設定路徑的方式
-const path = require('path');
 
 // 認證規則
 const registerRules = [
