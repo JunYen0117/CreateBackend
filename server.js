@@ -28,7 +28,7 @@ app.use('/images/product', express.static(path.join(__dirname, 'public', 'img', 
 // http://localhost:3003/images/brand/red.jpg
 app.use('/images/brand', express.static(path.join(__dirname, 'public', 'img', 'brands')));
 
-// 品牌圖片
+// 雜誌圖片
 // http://localhost:3003/images/artmagzs/
 app.use('/images/artmagzs', express.static(path.join(__dirname, 'public', 'img', 'artmagzs')));
 
@@ -36,6 +36,9 @@ app.use('/images/artmagzs', express.static(path.join(__dirname, 'public', 'img',
 const productRouter = require('./routers/productRouter')
 app.use('/api/product', productRouter);
 
+// 首頁主頁
+const frontRouter = require('./routers/frontpageRouter')
+app.use('/api/front', frontRouter);
 
 // 品牌頁 
 const brandspageRouter = require('./routers/brandspageRouter')
