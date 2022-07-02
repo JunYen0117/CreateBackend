@@ -41,5 +41,5 @@ router.put('/state', async (req, res, next) => {
 
 
 
-  // UPDATE `exhibition_order` SET `state` = '0' WHERE `exhibition_order`.`id` = 7;
+  
 module.exports = router;
