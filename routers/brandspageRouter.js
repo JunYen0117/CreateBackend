@@ -23,7 +23,7 @@ router.get('/brand/:brandId', async (req, res, next) => {
     create_time: brand[0].create_time,
     quantity: brand.length,
     address: brand[0].address,
-    logo: brand[0].logo,
+    logo: brand[0].logo
   });
 });
 
