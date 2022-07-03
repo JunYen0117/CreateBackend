@@ -138,7 +138,6 @@ router.get('/search', async (req, res, next) => {
 });
 // --------- Search ---------
 
-
 // --------- Product Detail ---------
 // localhost:3003/api/product/detail/1
 router.get('/detail/:productId', async (req, res, next) => {

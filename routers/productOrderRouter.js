@@ -81,7 +81,7 @@ router.get('/shipped/:orderId', async (req, res, next) => {
   res.json({
     total,
     result,
-    receiver:receiver
+    receiver: receiver,
   });
 });
 
@@ -248,7 +248,7 @@ router.get('/shipped', async (req, res, next) => {
 
 
 
-
+// 有問題
 // TODO: localhost:3003/api/productorder/notshipped
 router.get('/notshipped', async (req, res, next) => {
   // 抓使用者id為1的訂單列表
@@ -289,7 +289,8 @@ router.get('/notshipped', async (req, res, next) => {
     // j -> 訂單內的商品總數 （第幾個商品）
     let result = 0;
     for (let j = 0; j < totaldata[i].product.length; j++) {
-      console.log(totaldata[i].product[j]);
+      // 問題處
+      // console.log(totaldata[i].product[j]);
       result = result + totaldata[i].product[j].subtotal;
     }
     // console.log(result);
@@ -297,14 +298,11 @@ router.get('/notshipped', async (req, res, next) => {
     mydata = { orderid: totaldata[i].product[0].order_id, totalsub: result, orderdate: orderDate[i] };
     arrshipped = [...arrshipped, mydata];
   }
-  // console.log(totalarr);
+  // console.log('test');
   res.json({
     arrshipped:arrshipped
   });
 });
-
-
-
 
 // TODO:  localhost:3003/api/productorder/finish
 router.get('/finish', async (req, res, next) => {

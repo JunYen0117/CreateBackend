@@ -137,3 +137,4 @@ router.get('/product', async (req, res, next) => {
 });
 
 module.exports = router;
+
