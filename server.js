@@ -36,6 +36,12 @@ app.get('/', (req, res, next) => {
   res.send('首頁');
 });
 
+// app.get('/linepay', (req, res, next) => {
+//   res.send('首頁');
+//   console.log('data:', req.body);
+//   console.log('qu:',req.query.transactionId)
+// });
+
 // 商品圖片
 // http://localhost:3003/images/product/1_1咖啡壺.jpg
 app.use('/images/product', express.static(path.join(__dirname, 'public', 'img', 'products')));
