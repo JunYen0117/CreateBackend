@@ -28,12 +28,10 @@ router.get('/brand',async(req,res,next)=> {
         let [frontbrand] = await pool.execute(sql);
         res.json(frontbrand);
 })
-
 // 文章
-// router.get('/article',async(req,res,next)=> {
-//     const sql = 'SELECT id , title, image FROM blog'
-//         let [frontarticle] = await pool.execute(sql);
-//         res.json(frontarticle);
-
+router.get('/article',async(req,res,next)=> {
+    const sql = 'SELECT id , title, image FROM blog'
+        let [frontarticle] = await pool.execute(sql);
+        res.json(frontarticle);
+})
 module.exports = router;
-
