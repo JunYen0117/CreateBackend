@@ -52,6 +52,9 @@ app.use('/api/auth', AuthRouter)
 const memberRouter = require('./routers/memberRouter');
 app.use('/api/member', memberRouter);
 
+const emailRouter = require('./routers/emailRouter');
+app.use('/api/email', emailRouter);
+
 app.use((req, res, next) => {
   res.status(404).send('404 not found');
 });
