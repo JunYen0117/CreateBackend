@@ -36,6 +36,10 @@ app.use('/api/productorder', productOrderRouter);
 const favRouter = require ('./routers/favRouter')
 app.use('/api/fav', favRouter);
 
+//評論
+const commentRouter = require ('./routers/commentRouter')
+app.use('/api/comment', commentRouter);
+
 const productDetailRouter = require('./routers/productDetailRouter');
 app.use('/api/product/detail', productDetailRouter);
 
