@@ -136,5 +136,17 @@ router.get('/product', async (req, res, next) => {
   res.json(product);
 });
 
+// localhost:3003/api/fav/product/check
+router.get('/product/check/:userId/:productId', async (req, res, next) => {
+
+  const sql = 'SELECT * FROM collect_product WHERE customer_id = ? AND product_id = ?'
+
+  let [fav] = await pool.execute(sql, [req.params.userId, req.params.productId])
+
+  res.json(fav);
+})
+
+
+
 module.exports = router;
 

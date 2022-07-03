@@ -248,7 +248,7 @@ router.get('/shipped', async (req, res, next) => {
 
 
 
-// 有問題
+
 // TODO: localhost:3003/api/productorder/notshipped
 router.get('/notshipped', async (req, res, next) => {
   // 抓使用者id為1的訂單列表
@@ -289,7 +289,6 @@ router.get('/notshipped', async (req, res, next) => {
     // j -> 訂單內的商品總數 （第幾個商品）
     let result = 0;
     for (let j = 0; j < totaldata[i].product.length; j++) {
-      // 問題處
       // console.log(totaldata[i].product[j]);
       result = result + totaldata[i].product[j].subtotal;
     }
@@ -415,11 +414,6 @@ router.get('/cancel', async (req, res, next) => {
     arrcancel: arrcancel,
   });
 });
-
-
-
-
-
 
 
 
