@@ -1,6 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../utils/database.js');
+// 驗證資料
+const { body, validationResult } = require('express-validator');
+// 密碼雜湊
+const bcrypt = require('bcrypt');
 // 處理文件上傳
 const multer = require('multer');
 // 內建設定路徑的方式
@@ -51,18 +55,73 @@ const uploader = multer({
   }
 });
 
-// http://localhost:3003/api/member/editprofile
-router.post('/editprofile', uploader.single('avatar'), async (req, res, next) => {
+// http://localhost:3003/api/member/edit/profile
+router.post('/edit/profile', uploader.single('avatar'), async (req, res, next) => {
   // 圖片處理完成後，會被放在 req 物件裡
   // console.log('req.file', req.file);
   // console.log('req.body', req.body);
 
   let avatar = req.file ? '/members/' + req.file.filename : '';
 
-  let [result] = await pool.execute('UPDATE customer SET avatar=?, member_name=?, phone=?, address=?, gender=?, age=? WHERE id=?', [avatar, req.body.member_name, req.body.phone, req.body.address, req.body.gender, req.body.age, req.body.id]);
+  // 如果有更換大頭貼，才更新大頭貼
+  if(!avatar){
+    let [result] = await pool.execute('UPDATE customer SET member_name=?, phone=?, address=?, gender=?, age=? WHERE id=?', [req.body.member_name, req.body.phone, req.body.address, req.body.gender, req.body.age, req.body.id]);
+  }else{
+    let [result] = await pool.execute('UPDATE customer SET avatar=?, member_name=?, phone=?, address=?, gender=?, age=? WHERE id=?', [avatar, req.body.member_name, req.body.phone, req.body.address, req.body.gender, req.body.age, req.body.id]);    
+  }
 
   res.json({ message: '更新成功'});
 });
+
+
+const passwordRules = [
+  body('newPassword').isLength({min: 3}).withMessage('密碼長度至少為3'),
+  body('confirmNewPassword')
+    .custom((value, { req }) => {
+      // 驗證規則
+      return value === req.body.newPassword;
+    })
+    .withMessage('密碼驗證不一致'),
+];
+
+// http://localhost:3003/api/member/password/change
+router.post('/password/change', passwordRules, async (req, res, next) => {
+  // 確定收到前端送來的資料
+  console.log('form', req.body);
+
+  // 拿到驗證結果
+  const validateResults = validationResult(req);
+  console.log('validateResults', validateResults);
+
+  // 表單資料 驗證失敗 的情況，如果 驗證成功 會是 空的
+  if(!validateResults.isEmpty()) {
+    // 不是 empty --> 表示有不符合 --> 表示驗證失敗
+    let error = validateResults.array();
+    return res.status(400).json({error: error[0].msg});
+  }
+
+  let [customer] = await pool.execute('SELECT * FROM customer WHERE id = ?', [req.body.userID])
+
+  // console.log(customer);
+
+  // 比對 密碼是否輸入正確
+  let passwordCompareResult = await bcrypt.compare(req.body.oldPassword, customer[0].password);
+
+  // console.log(passwordCompareResult);
+
+  if (passwordCompareResult === false) {
+    return res.status(400).json({ error: '密碼錯誤' });
+  }
+
+  // 雜湊新的密碼
+  let hashNewPassword = await bcrypt.hash(req.body.newPassword, 10);
+
+  // 更新密碼
+  let [result] = await pool.execute('UPDATE customer SET password = ? WHERE id = ?', [hashNewPassword, req.body.userID])
+
+  res.json({message: 'change password'});
+})
+
 
 // http://localhost:3003/api/member/info
 router.get('/info', async (req, res, next) => {
@@ -76,8 +135,6 @@ router.get('/info', async (req, res, next) => {
     return res.status(403).json({ code: 2005, error: '狀態是沒有登入', status: 0 });
   }
 });
-
-
 
 
 module.exports = router;
