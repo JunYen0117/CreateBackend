@@ -64,21 +64,32 @@ router.get('/shipped/:orderId', async (req, res, next) => {
   }
   // console.log(result);
 
-  // 抓收件人資料 名字電話地址
-  let receiver = [];
+//  抓收件人資料 email 名字電話地址
+let receiver = [];
 
-  let [receiverdata] = await pool.execute(
-    'SELECT customer.member_name, customer.phone, customer.address, customer_order.id FROM `customer` JOIN customer_order ON customer.id = customer_order.customer_id WHERE customer_order.id= ?',
-    [req.params.orderId]
-  );
-  receiver = receiverdata;
-  // console.log(receiver);
+let [receiverdata] = await pool.execute(
+  'SELECT customer_order.* FROM `customer_order` WHERE customer_order.id= ?',
+  [req.params.orderId]
+);
+receiver = receiverdata;
+// console.log(receiver);
 
-  res.json({
-    total,
-    result,
-    receiver: receiver,
-  });
+//  抓付款人資料 名字電話地址
+let payment = [];
+
+let [paymentdata] = await pool.execute(
+  'SELECT customer.member_name, customer.phone, customer.address, customer_order.id FROM `customer` JOIN customer_order ON customer.id = customer_order.customer_id WHERE customer_order.id= ?',
+  [req.params.orderId]
+);
+payment = paymentdata;
+// console.log(payment);
+
+res.json({
+  total,
+  result,
+  receiver: receiver,
+  payment: payment,
+});
 });
 
 //   抓 id, vendor, productnum, product_name, price, account, total, image
@@ -103,21 +114,32 @@ router.get('/notshipped/:orderId', async (req, res, next) => {
   }
   // console.log(result);
 
-  // 抓收件人資料 名字電話地址
-  let receiver = [];
+  //  抓收件人資料 email 名字電話地址
+let receiver = [];
 
-  let [receiverdata] = await pool.execute(
-    'SELECT customer.member_name, customer.phone, customer.address, customer_order.id FROM `customer` JOIN customer_order ON customer.id = customer_order.customer_id WHERE customer_order.id= ?',
-    [req.params.orderId]
-  );
-  receiver = receiverdata;
-  // console.log(receiver);
+let [receiverdata] = await pool.execute(
+  'SELECT customer_order.* FROM `customer_order` WHERE customer_order.id= ?',
+  [req.params.orderId]
+);
+receiver = receiverdata;
+// console.log(receiver);
 
-  res.json({
-    total,
-    result,
-    receiver: receiver,
-  });
+//  抓付款人資料 名字電話地址
+let payment = [];
+
+let [paymentdata] = await pool.execute(
+  'SELECT customer.member_name, customer.phone, customer.address, customer_order.id FROM `customer` JOIN customer_order ON customer.id = customer_order.customer_id WHERE customer_order.id= ?',
+  [req.params.orderId]
+);
+payment = paymentdata;
+// console.log(payment);
+
+res.json({
+  total,
+  result,
+  receiver: receiver,
+  payment: payment,
+});
 });
 
 //  抓 id, vendor, productnum, product_name, price, account, total, image
@@ -142,15 +164,15 @@ router.get('/cancel/:orderId', async (req, res, next) => {
   }
   // console.log(result);
 
-  //  抓收件人資料 名字電話地址
-  let receiver = [];
+ //  抓收件人資料 email 名字電話地址
+ let receiver = [];
 
-  let [receiverdata] = await pool.execute(
-    'SELECT customer.member_name, customer.phone, customer.address, customer_order.id FROM `customer` JOIN customer_order ON customer.id = customer_order.customer_id WHERE customer_order.id= ?',
-    [req.params.orderId]
-  );
-  receiver = receiverdata;
-  // console.log(receiver);
+ let [receiverdata] = await pool.execute(
+   'SELECT customer_order.* FROM `customer_order` WHERE customer_order.id= ?',
+   [req.params.orderId]
+ );
+ receiver = receiverdata;
+ // console.log(receiver);
 
 //  抓付款人資料 名字電話地址
   let payment = [];
