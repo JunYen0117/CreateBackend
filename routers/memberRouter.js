@@ -3,11 +3,9 @@ const router = express.Router();
 const pool = require('../utils/database.js');
 // 驗證資料
 const { body, validationResult } = require('express-validator');
-// 密碼雜湊
 const bcrypt = require('bcrypt');
 // 處理文件上傳
 const multer = require('multer');
-// 內建設定路徑的方式
 const path = require('path');
 
 // 圖片上傳需要地方放，在 public 裡，建立 members 放圖片
