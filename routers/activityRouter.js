@@ -10,11 +10,21 @@ router.get('/', async (req, res, next) => {
   //state 2 =已使用
   // console.log('state', state);
 
-    const sql = 'SELECT exhibition_order.id,exhibition_order.state,exhibition_order.count,exhibition_order.total,exhibition.exhibition_name,exhibition.start_date,exhibition.end_date,exhibition.start_time,exhibition.end_time,exhibition.exhibition_location,exhibition_img.exhibition_img FROM exhibition_order JOIN exhibition ON exhibition.id = exhibition_order.exhibition_id JOIN exhibition_img ON exhibition_img.exhibition_id = exhibition_order.exhibition_id AND exhibition_img.img_main=1 WHERE customer_id = 1 AND state = ?'
+    const sql = 'SELECT exhibition_order.id,exhibition_order.state,exhibition_order.count,exhibition_order.total,exhibition.exhibition_name,exhibition.start_date,exhibition.end_date,exhibition.start_time,exhibition.end_time,exhibition.exhibition_location,exhibition_img.exhibition_img FROM exhibition_order JOIN exhibition ON exhibition.id = exhibition_order.exhibition_id JOIN exhibition_img ON exhibition_img.exhibition_id = exhibition_order.exhibition_id AND exhibition_img.img_main=1 WHERE customer_id = 1 AND state = ? ORDER BY `exhibition_order`.`order_date` DESC'
     
   
   
     let [activity] = await pool.execute(sql, [state]);
+    activity.map((item,index)=>{
+      let startTime=item.start_time.toString()
+      let endTime=item.end_time.toString()
+      startTime=startTime.slice(0,5)
+      endTime=endTime.slice(0,5)
+      item.start_time=startTime
+      item.end_time=endTime
+     
+    })
+   
   
     res.json(activity);
    

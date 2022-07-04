@@ -39,6 +39,7 @@ router.post('/', async (req, res, next) => {
     }
   }
   const line = await linePay.request(order).then(res=>{
+    // console.log(res)
     payUrl=res.info.paymentUrl.web
   })
     // console.log('data:', req.body);
@@ -72,7 +73,7 @@ router.get('/linepay', (req, res, next) => {
   // res.send("OK");
   
 
-  res.redirect('http://localhost:3000/exhibition');
+  res.redirect('http://localhost:3000/activity');
   
   
 

@@ -52,6 +52,11 @@ router.get('/', async (req, res, next) => { //商品頁
   
   let [exhibition] = await pool.execute(sql, [minPrice, maxPrice,selectdate,today]);
 
+  exhibition.map((item,index)=>{
+    item.start_date=(item.start_date).replace(/-/g,'/')
+    item.end_date=(item.end_date).replace(/-/g,'/')
+  })
+ 
   res.json(exhibition);
  
 });
@@ -62,7 +67,15 @@ router.get('/:exhibitionId', async (req, res, next) => { //商品詳細頁
 
   const sql2 = 'SELECT exhibition_img.exhibition_img FROM exhibition JOIN exhibition_img ON exhibition_img.exhibition_id = exhibition.id WHERE exhibition.id = ?'
   let [exhibitionImg] = await pool.execute(sql2, [req.params.exhibitionId]);
-
+  exhibition.map((item,index)=>{
+    let startTime=item.start_time.toString()
+    let endTime=item.end_time.toString()
+    item.start_time=startTime.slice(0,5)
+    item.end_time=endTime.slice(0,5)
+    item.start_date=(item.start_date).replace(/-/g,'/')
+    item.end_date=(item.end_date).replace(/-/g,'/')
+   
+  })
   res.json({
     exhibition: exhibition,
     image: exhibitionImg,
