@@ -8,13 +8,11 @@ const pool = require('../utils/database');
 TODO: router.post('/product/add', async (req, res, next) => {
   console.log('data', req.body);
 
-
   const sql = 'INSERT INTO product_comment (product_id, customer_id, comment, star) VALUES (?,?,?,?)';
 
-  for (i = 0; i < req.body.length ; i++) {
+  for (i = 0; i < req.body.length; i++) {
     let [comment] = await pool.execute(sql, [req.body[i].product_id, req.body[i].customer_id, req.body[i].comment, req.body[i].star]);
   }
-
 
   res.json({ message: 'OK' });
 });
