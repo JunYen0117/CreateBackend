@@ -9,7 +9,7 @@ router.get('/', async (req, res, next) => { //商品頁
   let SelectArea='';
   if((req.query.area)!==''){ //設定篩選地區
     SelectArea=`AND area = '${req.query.area}'`
-    console.log(SelectArea);
+    // console.log(SelectArea);
   }else{
     SelectArea=''
   }
