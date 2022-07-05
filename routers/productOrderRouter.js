@@ -198,13 +198,13 @@ router.get('/cancel/:orderId', async (req, res, next) => {
 router.get('/finish/:orderId', async (req, res, next) => {
   // console.log('orderId', req.params.orderId)
   const sql2 =
-    'SELECT customer_order_detail.order_id, customer_order_detail.price, customer_order_detail.amount, customer_order_detail.subtotal, product.product_name, product.product_num, product.image, vendor.business_name FROM customer_order_detail JOIN product ON customer_order_detail.product_id = product.id JOIN vendor ON customer_order_detail.vendor_id = vendor.id WHERE order_id = ? ';
+    'SELECT customer_order_detail.order_id, customer_order_detail.product_id, customer_order_detail.price, customer_order_detail.amount, customer_order_detail.subtotal, product.product_name, product.product_num, product.image, vendor.business_name FROM customer_order_detail JOIN product ON customer_order_detail.product_id = product.id JOIN vendor ON customer_order_detail.vendor_id = vendor.id WHERE order_id = ? ';
 
   // 取得商品數量[req.params.orderId]
   let [productdetail] = await pool.execute(sql2, [req.params.orderId]);
   let total = productdetail;
 
-  // console.log(total);
+ 
 
   // 抓總金額
   let result = 0;
