@@ -55,6 +55,9 @@ app.use('/api/member', memberRouter);
 const emailRouter = require('./routers/emailRouter');
 app.use('/api/email', emailRouter);
 
+const productRouter = require('./routers/productRouter');
+app.use('/api/product', productRouter);
+
 app.use((req, res, next) => {
   res.status(404).send('404 not found');
 });

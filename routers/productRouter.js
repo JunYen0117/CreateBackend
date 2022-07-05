@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-// const pool = require('../utils/database');
+const pool = require('../utils/database');
 
 // localhost:3003/api/product
 router.get('/', async (req, res, next) => {
@@ -13,7 +13,7 @@ router.get('/', async (req, res, next) => {
 router.get('/classification', async (req, res, next) => {
   const sql = 'SELECT * FROM classification'
   const [classification] = await pool.execute(sql);
-  res.json(classification);
+  res.json([{msg: 'Email 已註冊過', param: 'account', location: 'body'}]);
 });
 
 // localhost:3003/api/product/classification/1
