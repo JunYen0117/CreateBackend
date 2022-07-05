@@ -61,6 +61,8 @@ router.get('/receive', async (req, res, next) => {
   // console.log('current receivePage', receivePage);
 
   let [receiveList] = await pool.execute('SELECT * FROM coupon right JOIN coupon_take on coupon.id = coupon_id where customer_id=2 AND coupon_status=1 ORDER BY `discount` ASC');
+  console.log('receiveList:', receiveList);
+
   const receiveTotal = receiveList.length;
   // console.log('receiveTotal:', receiveTotal);
 
@@ -88,6 +90,29 @@ router.get('/receive', async (req, res, next) => {
     receiveList: pageReceiveList,
   });
   // console.log('receiveList:', receiveList);
+});
+
+// 已失效優惠券(優惠券過期)
+// localhost:3003/api/coupons/updateCoupon
+router.get('/updateCoupon', async (req, res, next) => {
+  
+  let [updateCoupon] = await pool.execute(
+      'SELECT * FROM coupon_take right JOIN coupon on coupon_id = coupon.id where  coupon_end_period < CURDATE() ORDER BY `coupon_id` ASC',
+    );
+  console.log('updateCoupon:', updateCoupon);
+
+  let updateCouponStatus = [];
+
+  for (let i = 0; i <  updateCoupon.length; i++) {
+    [updateCouponStatus] = await pool.execute('UPDATE coupon_take SET coupon_status = "0" WHERE coupon_id = ? ', [ updateCoupon[i].coupon_id]);
+    console.log('updateCouponStatus:', updateCouponStatus);
+  }
+
+  res.json({
+    updateCoupon,
+    updateCouponStatus, // 更新優惠券狀態
+    msg: '更新成功',
+  });
 });
 
 // 撈出全部使用者擁有的優惠券但已失效
@@ -149,28 +174,6 @@ router.post('/insertCoupon', async (req, res, next) => {
     insertCoupon, // 領取的優惠券
     updateCoupon, // 更新優惠券數量
     msg: '領取成功',
-  });
-});
-
-// 已失效優惠券(優惠券過期)
-// localhost:3003/api/coupons/updateCoupon
-router.post('/updateCoupon', async (req, res, next) => {
-  for (let i = 0; i < req.body.length; i++) {
-    [updateCoupon] = await pool.execute(
-      'SELECT * FROM coupon_take right JOIN coupon on coupon_id = coupon.id where customer_id = ? AND coupon_end_period < CURDATE() ORDER BY `coupon_id` ASC',
-      [req.body[i].customer_id]
-    );
-  }
-  // console.log('updateCoupon:',updateCoupon);
-  for (let i = 0; i < req.body.length; i++) {
-    [updateCouponStatus] = await pool.execute('UPDATE coupon_take SET coupon_status = "0" WHERE coupon_id = ? ', [req.body[i].coupon_id]);
-    // console.log(req.body);
-    // console.log('updateCouponStatus:',updateCouponStatus);
-  }
-  res.json({
-    updateCoupon,
-    updateCouponStatus, // 更新優惠券狀態
-    msg: '更新成功',
   });
 });
 
@@ -259,8 +262,6 @@ router.post('/updateCoupon', async (req, res, next) => {
 //   ],
 //   "msg": "更新成功"
 // }
-
-
 
 // 單一優惠券的分頁
 // router.get('/:couponNum', async (req, res, next) => {
