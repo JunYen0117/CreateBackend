@@ -21,4 +21,26 @@ router.get('/Magzarticle/:articleId', async (req,res,next)=>{
         image:article[0].image
     })
 })
+
+// 文章評論讀取
+router.get('/comment/:articleId', async (req,res,next)=>{
+    const sql = 'SELECT `comment` FROM `blog_comment` WHERE `blog_id` = ?;'
+    let [article] = await pool.execute(sql, [req.params.articleId]);
+    res.json({
+        comments: article,
+    })
+})
+// 文章評論新增
+router.post('/comment', async (req,res,next)=>{
+    console.log(req.body.blog_id)
+    await pool.execute('INSERT INTO blog_comment (`blog_id`, `customer_id`, `comment`) VALUES (?,?,?);', 
+    [req.body.blog_id, req.body.customer_id, req.body.comment],(error, results) => {
+     if (error) return res.json({ error: error });
+     });
+     res.json({
+         state: "ok"
+     })
+    })
+
+
 module.exports = router;
