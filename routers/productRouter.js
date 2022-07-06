@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const pool = require('../utils/database');
+// const pool = require('../utils/database');
 
 // localhost:3003/api/product
 router.get('/', async (req, res, next) => {
