@@ -9,11 +9,11 @@ const pool = require('../utils/database');
 //  TODO: localhost:3003/api/productorder/shipped/:customer_id/:orderId/:valid
 
 router.get('/shipped/:customer_id/:orderId/:valid', async (req, res, next) => {
-  const sql3 = 'UPDATE customer_order SET valid = 1 WHERE id = ?';
+  const sql3 = 'UPDATE customer_order SET valid = 1 WHERE customer_id =? AND id = ?';
 
   //console.log(req.params.orderId)
 
-  let [ordervalid] = await pool.execute(sql3, [req.params.orderId]);
+  let [ordervalid] = await pool.execute(sql3, [req.params.customer_id, req.params.orderId]);
   let valid = ordervalid;
 
   res.json({
@@ -28,11 +28,11 @@ router.get('/shipped/:customer_id/:orderId/:valid', async (req, res, next) => {
 //  TODO:  localhost:3003/api/productorder/notshipped/:customer_id/:orderId/:valid
 
 router.get('/notshipped/:customer_id/:orderId/:valid', async (req, res, next) => {
-  const sql3 = 'UPDATE customer_order SET valid = 0 WHERE id = ?';
+  const sql3 = 'UPDATE customer_order SET valid = 0 WHERE customer_id =? AND id = ?';
 
   //console.log(req.params.orderId)
 
-  let [ordervalid] = await pool.execute(sql3, [req.params.orderId]);
+  let [ordervalid] = await pool.execute(sql3, [req.params.customer_id, req.params.orderId]);
   let valid = ordervalid;
 
   res.json({
@@ -48,10 +48,10 @@ router.get('/notshipped/:customer_id/:orderId/:valid', async (req, res, next) =>
 router.get('/shipped/:customer_id/:orderId', async (req, res, next) => {
   // console.log('orderId', req.params.orderId)
   const sql2 =
-    'SELECT customer_order_detail.order_id, customer_order_detail.price, customer_order_detail.amount, customer_order_detail.subtotal, product.product_name, product.product_num, product.image, vendor.business_name FROM customer_order_detail JOIN product ON customer_order_detail.product_id = product.id JOIN vendor ON customer_order_detail.vendor_id = vendor.id WHERE order_id = ? ';
+    'SELECT customer_order_detail.order_id, customer_order_detail.price, customer_order_detail.amount, customer_order_detail.subtotal, product.product_name, product.product_num, product.image, vendor.business_name, customer_order.customer_id FROM customer_order_detail JOIN product ON customer_order_detail.product_id = product.id JOIN vendor ON customer_order_detail.vendor_id = vendor.id JOIN customer_order ON customer_order_detail.order_id = customer_order.id WHERE customer_order.customer_id = ? AND customer_order_detail.order_id = ? ';
 
   // 取得商品數量[req.params.orderId]
-  let [productdetail] = await pool.execute(sql2, [req.params.orderId]);
+  let [productdetail] = await pool.execute(sql2, [req.params.customer_id, req.params.orderId]);
   let total = productdetail;
 
   // console.log(total);
@@ -60,17 +60,13 @@ router.get('/shipped/:customer_id/:orderId', async (req, res, next) => {
   let result = 0;
   for (let i = 0; i < total.length; i++) {
     result = result + total[i].subtotal;
-  
   }
   // console.log(result);
 
   //  抓收件人資料 email 名字電話地址
   let receiver = [];
 
-  let [receiverdata] = await pool.execute(
-    'SELECT customer_order.* FROM `customer_order` WHERE customer_order.id= ?',
-    [req.params.orderId]
-  );
+  let [receiverdata] = await pool.execute('SELECT customer_order.* FROM `customer_order` WHERE customer_order.id= ?', [req.params.orderId]);
   receiver = receiverdata;
   // console.log(receiver);
 
@@ -92,16 +88,17 @@ router.get('/shipped/:customer_id/:orderId', async (req, res, next) => {
   });
 });
 
+
 //   抓 id, vendor, productnum, product_name, price, account, total, image
 
 // TODO: localhost:3003/api/productorder/notshipped/:customer_id/:orderID
 router.get('/notshipped/:customer_id/:orderId', async (req, res, next) => {
   // console.log('orderId', req.params.orderId)
   const sql2 =
-    'SELECT customer_order_detail.order_id, customer_order_detail.price, customer_order_detail.amount, customer_order_detail.subtotal, product.product_name, product.product_num, product.image, vendor.business_name FROM customer_order_detail JOIN product ON customer_order_detail.product_id = product.id JOIN vendor ON customer_order_detail.vendor_id = vendor.id WHERE order_id = ? ';
+    'SELECT customer_order_detail.order_id, customer_order_detail.price, customer_order_detail.amount, customer_order_detail.subtotal, product.product_name, product.product_num, product.image, vendor.business_name, customer_order.customer_id FROM customer_order_detail JOIN product ON customer_order_detail.product_id = product.id JOIN vendor ON customer_order_detail.vendor_id = vendor.id JOIN customer_order ON customer_order_detail.order_id = customer_order.id WHERE customer_order.customer_id = ? AND customer_order_detail.order_id = ? ';
 
   // 取得商品數量[req.params.orderId]
-  let [productdetail] = await pool.execute(sql2, [req.params.orderId]);
+  let [productdetail] = await pool.execute(sql2, [req.params.customer_id, req.params.orderId]);
   let total = productdetail;
 
   // console.log(total);
@@ -110,36 +107,32 @@ router.get('/notshipped/:customer_id/:orderId', async (req, res, next) => {
   let result = 0;
   for (let i = 0; i < total.length; i++) {
     result = result + total[i].subtotal;
-  
   }
   // console.log(result);
 
   //  抓收件人資料 email 名字電話地址
-let receiver = [];
+  let receiver = [];
 
-let [receiverdata] = await pool.execute(
-  'SELECT customer_order.* FROM `customer_order` WHERE customer_order.id= ?',
-  [req.params.orderId]
-);
-receiver = receiverdata;
-// console.log(receiver);
+  let [receiverdata] = await pool.execute('SELECT customer_order.* FROM `customer_order` WHERE customer_order.id= ?', [req.params.orderId]);
+  receiver = receiverdata;
+  // console.log(receiver);
 
-//  抓付款人資料 名字電話地址
-let payment = [];
+  //  抓付款人資料 名字電話地址
+  let payment = [];
 
-let [paymentdata] = await pool.execute(
-  'SELECT customer.member_name, customer.phone, customer.address, customer_order.id FROM `customer` JOIN customer_order ON customer.id = customer_order.customer_id WHERE customer_order.id= ?',
-  [req.params.orderId]
-);
-payment = paymentdata;
-// console.log(payment);
+  let [paymentdata] = await pool.execute(
+    'SELECT customer.member_name, customer.phone, customer.address, customer_order.id FROM `customer` JOIN customer_order ON customer.id = customer_order.customer_id WHERE customer_order.id= ?',
+    [req.params.orderId]
+  );
+  payment = paymentdata;
+  // console.log(payment);
 
-res.json({
-  total,
-  result,
-  receiver: receiver,
-  payment: payment,
-});
+  res.json({
+    total,
+    result,
+    receiver: receiver,
+    payment: payment,
+  });
 });
 
 //  抓 id, vendor, productnum, product_name, price, account, total, image
@@ -148,10 +141,10 @@ res.json({
 router.get('/cancel/:customer_id/:orderId', async (req, res, next) => {
   // console.log('orderId', req.params.orderId)
   const sql2 =
-    'SELECT customer_order_detail.order_id, customer_order_detail.price, customer_order_detail.amount, customer_order_detail.subtotal, product.product_name, product.product_num, product.image, vendor.business_name FROM customer_order_detail JOIN product ON customer_order_detail.product_id = product.id JOIN vendor ON customer_order_detail.vendor_id = vendor.id WHERE order_id = ? ';
+    'SELECT customer_order_detail.order_id, customer_order_detail.price, customer_order_detail.amount, customer_order_detail.subtotal, product.product_name, product.product_num, product.image, vendor.business_name, customer_order.customer_id FROM customer_order_detail JOIN product ON customer_order_detail.product_id = product.id JOIN vendor ON customer_order_detail.vendor_id = vendor.id JOIN customer_order ON customer_order_detail.order_id = customer_order.id WHERE customer_order.customer_id = ? AND customer_order_detail.order_id = ? ';
 
   // 取得商品數量[req.params.orderId]
-  let [productdetail] = await pool.execute(sql2, [req.params.orderId]);
+  let [productdetail] = await pool.execute(sql2, [req.params.customer_id, req.params.orderId]);
   let total = productdetail;
 
   // console.log(total);
@@ -160,21 +153,17 @@ router.get('/cancel/:customer_id/:orderId', async (req, res, next) => {
   let result = 0;
   for (let i = 0; i < total.length; i++) {
     result = result + total[i].subtotal;
-    
   }
   // console.log(result);
 
- //  抓收件人資料 email 名字電話地址
- let receiver = [];
+  //  抓收件人資料 email 名字電話地址
+  let receiver = [];
 
- let [receiverdata] = await pool.execute(
-   'SELECT customer_order.* FROM `customer_order` WHERE customer_order.id= ?',
-   [req.params.orderId]
- );
- receiver = receiverdata;
- // console.log(receiver);
+  let [receiverdata] = await pool.execute('SELECT customer_order.* FROM `customer_order` WHERE customer_order.id= ?', [req.params.orderId]);
+  receiver = receiverdata;
+  // console.log(receiver);
 
-//  抓付款人資料 名字電話地址
+  //  抓付款人資料 名字電話地址
   let payment = [];
 
   let [paymentdata] = await pool.execute(
@@ -198,13 +187,11 @@ router.get('/cancel/:customer_id/:orderId', async (req, res, next) => {
 router.get('/finish/:customer_id/:orderId', async (req, res, next) => {
   // console.log('orderId', req.params.orderId)
   const sql2 =
-    'SELECT customer_order_detail.order_id, customer_order_detail.product_id, customer_order_detail.price, customer_order_detail.amount, customer_order_detail.subtotal, product.product_name, product.product_num, product.image, vendor.business_name FROM customer_order_detail JOIN product ON customer_order_detail.product_id = product.id JOIN vendor ON customer_order_detail.vendor_id = vendor.id WHERE order_id = ? ';
+    'SELECT customer_order_detail.order_id, customer_order_detail.price, customer_order_detail.amount, customer_order_detail.subtotal, product.product_name, product.product_num, product.image, vendor.business_name, customer_order.customer_id FROM customer_order_detail JOIN product ON customer_order_detail.product_id = product.id JOIN vendor ON customer_order_detail.vendor_id = vendor.id JOIN customer_order ON customer_order_detail.order_id = customer_order.id WHERE customer_order.customer_id = ? AND customer_order_detail.order_id = ? ';
 
   // 取得商品數量[req.params.orderId]
-  let [productdetail] = await pool.execute(sql2, [req.params.orderId]);
+  let [productdetail] = await pool.execute(sql2, [req.params.customer_id, req.params.orderId]);
   let total = productdetail;
-
- 
 
   // 抓總金額
   let result = 0;
@@ -213,14 +200,10 @@ router.get('/finish/:customer_id/:orderId', async (req, res, next) => {
   }
   // console.log(result);
 
-  
   //  抓收件人資料 email 名字電話地址
   let receiver = [];
 
-  let [receiverdata] = await pool.execute(
-    'SELECT customer_order.* FROM `customer_order` WHERE customer_order.id= ?',
-    [req.params.orderId]
-  );
+  let [receiverdata] = await pool.execute('SELECT customer_order.* FROM `customer_order` WHERE customer_order.id= ?', [req.params.orderId]);
   receiver = receiverdata;
   // console.log(receiver);
 
@@ -357,7 +340,7 @@ router.get('/finish/:customer_id', async (req, res, next) => {
   const sql2 = 'SELECT * FROM customer_order WHERE customer_order.customer_id = ? AND valid = 1 '; //消費者寫死
 
   // 抓使用者id為1的訂單總數
-  let [productorder] = await pool.execute(sql2 , [req.params.customer_id]);
+  let [productorder] = await pool.execute(sql2, [req.params.customer_id]);
   // console.log(productorder);
   let orderId = [];
   let orderDate = [];
@@ -459,6 +442,5 @@ TODO: router.get('/cancel/:customer_id', async (req, res, next) => {
     arrcancel: arrcancel,
   });
 });
-
 
 module.exports = router;
