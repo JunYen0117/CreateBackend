@@ -8,15 +8,15 @@ const pool = require('../utils/database');
 router.post('/product/add', async (req, res, next) => {
   const sql = 'INSERT INTO product_comment (order_id, product_id, customer_id, comment, star) VALUES (?,?,?,?,?)';
 
-  for (i = 0; i < req.body.length ; i++) {
-    if(req.body[i].comment) {
+  for (i = 0; i < req.body.length; i++) {
+    if (req.body[i].comment) {
       let [comment] = await pool.execute(sql, [req.body[i].order_id, req.body[i].product_id, req.body[i].customer_id, req.body[i].comment, req.body[i].star]);
     } else {
-      sql = 'INSERT INTO product_comment (order_id, product_id, customer_id, star) VALUES (?, ?,?,?)';
-      let [comment] = await pool.execute(sql, [req.body[i].order_id, req.body[i].product_id, req.body[i].customer_id, req.body[i].star]); 
+      sql = 'INSERT INTO product_comment (order_id, product_id, customer_id, star) VALUES (?,?,?,?)';
+      let [comment] = await pool.execute(sql, [req.body[i].order_id, req.body[i].product_id, req.body[i].customer_id, req.body[i].star]);
     }
   }
-  
+
   res.json({ message: 'OK' });
 });
 
