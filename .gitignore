@@ -41,6 +41,8 @@ build/Release
 # Dependency directories
 node_modules/
 jspm_packages/
+/.pnp
+.pnp.js
 
 # Snowpack dependency directory (https://snowpack.dev/)
 web_modules/
@@ -78,6 +80,9 @@ web_modules/
 .env.test.local
 .env.production.local
 .env.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
@@ -128,3 +133,6 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# upload folders
+CreateBackend/public/members
