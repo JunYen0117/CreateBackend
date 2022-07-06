@@ -42,7 +42,7 @@ router.post('/signup', registerRules, async (req, res, next) => {
   console.log('members', members);
   if (members.length !== 0) {
     // 這個 email 有註冊過
-    return res.status(400).json({ code: 3011, error: '這個 email 已經註冊過' });
+    return res.status(400).json([{msg: 'Email 已註冊過', param: 'account', location: 'body'}]);
   }
 
   // 密碼雜湊 hash ; bcrypt (長度: 60)
