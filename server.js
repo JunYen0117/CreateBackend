@@ -13,7 +13,7 @@ let FileStore = require('session-file-store')(expressSession);
 app.use(
   expressSession({
     store: new FileStore({
-      path: path.join(__dirname, '..', 'sessions'), 
+      path: path.join(__dirname, '..', 'sessions'),
     }),
     secret: process.env.SESSION_SECRET,
     resave: false,
@@ -55,17 +55,16 @@ const cartRouter = require('./routers/cartRouter');
 app.use('/api/cart', cartRouter);
 
 // 訂單
-const productOrderRouter = require('./routers/productOrderRouter')
+const productOrderRouter = require('./routers/productOrderRouter');
 app.use('/api/productorder', productOrderRouter);
 
 // 收藏
-const favRouter = require ('./routers/favRouter')
+const favRouter = require('./routers/favRouter');
 app.use('/api/fav', favRouter);
 
 // 評論
-const commentRouter = require ('./routers/commentRouter')
+const commentRouter = require('./routers/commentRouter');
 app.use('/api/comment', commentRouter);
-
 
 // 登入註冊
 const AuthRouter = require('./routers/authRouter');
@@ -80,7 +79,7 @@ const emailRouter = require('./routers/emailRouter');
 app.use('/api/email', emailRouter);
 
 // 優惠券
-const couponRouter = require('./routers/couponRouter')
+const couponRouter = require('./routers/couponRouter');
 app.use('/api/coupons', couponRouter);
 
 app.use((req, res, next) => {
