@@ -45,18 +45,45 @@ app.use('/images/members', express.static(path.join(__dirname, 'public', 'member
 // http://localhost:3003/images/product/1_1咖啡壺.jpg
 app.use('/images/product', express.static(path.join(__dirname, 'public', 'img', 'products')));
 
+// Routers
+// 購物商城
+const productRouter = require('./routers/productRouter');
+app.use('/api/product', productRouter);
+
+// 購物車
+const cartRouter = require('./routers/cartRouter');
+app.use('/api/cart', cartRouter);
+
+// 訂單
+const productOrderRouter = require('./routers/productOrderRouter')
+app.use('/api/productorder', productOrderRouter);
+
+// 收藏
+const favRouter = require ('./routers/favRouter')
+app.use('/api/fav', favRouter);
+
+// 評論
+const commentRouter = require ('./routers/commentRouter')
+app.use('/api/comment', commentRouter);
+
+
 // 登入註冊
 const AuthRouter = require('./routers/authRouter');
-app.use('/api/auth', AuthRouter)
+app.use('/api/auth', AuthRouter);
+
 // 會員
 const memberRouter = require('./routers/memberRouter');
 app.use('/api/member', memberRouter);
 
+// Email
 const emailRouter = require('./routers/emailRouter');
 app.use('/api/email', emailRouter);
 
 const productRouter = require('./routers/productRouter');
 app.use('/api/product', productRouter);
+// 優惠券
+const couponRouter = require('./routers/couponRouter')
+app.use('/api/coupons', couponRouter);
 
 app.use((req, res, next) => {
   res.status(404).send('404 not found');
