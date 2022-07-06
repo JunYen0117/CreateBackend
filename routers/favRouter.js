@@ -104,7 +104,7 @@ router.get('/product/:userId', async (req, res, next) => {
 // localhost:3003/api/fav/activity
 router.get('/activity', async (req, res, next) => {
   const sql2 =
-    'SELECT collect_exhibition.*, exhibition.exhibition_name, exhibition.exhibition_price, exhibition.start_date, exhibition.end_date, exhibition.start_time, exhibition.end_time, exhibition.exhibition_location FROM collect_exhibition JOIN exhibition ON collect_exhibition.exhibition_id = exhibition.id WHERE collect_exhibition.customer_id = 1';
+    'SELECT collect_exhibition.*, exhibition.exhibition_name, exhibition.exhibition_price, exhibition.start_date, exhibition.end_date, exhibition.start_time, exhibition.end_time, exhibition.exhibition_location FROM collect_exhibition JOIN exhibition ON collect_exhibition.exhibition_id = exhibition.id WHERE collect_exhibition.customer_id = ?';
 
   
   let [exhibition] = await pool.execute(sql2);

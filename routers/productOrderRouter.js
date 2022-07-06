@@ -244,13 +244,13 @@ router.get('/finish/:orderId', async (req, res, next) => {
 
 // ======================== List ==============================
 
-// TODO: localhost:3003/api/productorder/shipped
-router.get('/shipped', async (req, res, next) => {
+// TODO: localhost:3003/api/productorder/shipped/:customer_id
+router.get('/shipped/:customer_id', async (req, res, next) => {
   // 抓使用者id為1的訂單列表
-  const sql2 = 'SELECT * FROM customer_order WHERE customer_order.customer_id = 1 AND valid = 3 '; //消費者寫死 valid=3 shipped
+  const sql2 = 'SELECT * FROM customer_order WHERE customer_order.customer_id = ? AND valid = 3 '; //消費者寫死 valid=3 shipped
 
   // 抓使用者id為1的訂單總數
-  let [productorder] = await pool.execute(sql2);
+  let [productorder] = await pool.execute(sql2, [req.params.customer_id]);
   // console.log(productorder);
   let orderId = [];
   let orderDate = [];
@@ -297,14 +297,14 @@ router.get('/shipped', async (req, res, next) => {
   });
 });
 
-// TODO: localhost:3003/api/productorder/notshipped
-router.get('/notshipped', async (req, res, next) => {
+// TODO: localhost:3003/api/productorder/notshipped/:customer_id
+router.get('/notshipped/:customer_id', async (req, res, next) => {
   // 抓使用者id為1的訂單列表
-  const sql2 = 'SELECT * FROM customer_order WHERE customer_order.customer_id = 1 AND valid = 2 ';
+  const sql2 = 'SELECT * FROM customer_order WHERE customer_order.customer_id = ? AND valid = 2 ';
   // valid = 2 notshipped valid= 3 shipped
 
   // 抓使用者id為1的訂單總數
-  let [productorder] = await pool.execute(sql2);
+  let [productorder] = await pool.execute(sql2, [req.params.customer_id]);
   // console.log(productorder);
   let orderId = [];
   let orderDate = [];
@@ -351,13 +351,13 @@ router.get('/notshipped', async (req, res, next) => {
   });
 });
 
-// TODO:  localhost:3003/api/productorder/finish
-router.get('/finish', async (req, res, next) => {
+// TODO:  localhost:3003/api/productorder/finish/:customer_id
+router.get('/finish/:customer_id', async (req, res, next) => {
   // 抓使用者id為1的訂單列表
-  const sql2 = 'SELECT * FROM customer_order WHERE customer_order.customer_id = 1 AND valid = 1 '; //消費者寫死
+  const sql2 = 'SELECT * FROM customer_order WHERE customer_order.customer_id = ? AND valid = 1 '; //消費者寫死
 
   // 抓使用者id為1的訂單總數
-  let [productorder] = await pool.execute(sql2);
+  let [productorder] = await pool.execute(sql2 , [req.params.customer_id]);
   // console.log(productorder);
   let orderId = [];
   let orderDate = [];
@@ -405,14 +405,14 @@ router.get('/finish', async (req, res, next) => {
   });
 });
 
-// localhost:3003/api/productorder/cancel
-TODO: router.get('/cancel', async (req, res, next) => {
+// localhost:3003/api/productorder/cancel/:customer_id
+TODO: router.get('/cancel/:customer_id', async (req, res, next) => {
   // 抓使用者id為1的訂單列表
-  const sql2 = 'SELECT * FROM customer_order WHERE customer_order.customer_id = 1 AND valid= 0';
+  const sql2 = 'SELECT * FROM customer_order WHERE customer_order.customer_id = ? AND valid= 0';
   //消費者目前寫死 valid等於0
 
   // 抓使用者id為1的訂單總數
-  let [productorder] = await pool.execute(sql2);
+  let [productorder] = await pool.execute(sql2, [req.params.customer_id]);
   // console.log(productorder)
   let orderId = [];
   let orderDate = [];
