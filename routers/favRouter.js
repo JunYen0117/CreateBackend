@@ -101,40 +101,40 @@ router.get('/product/:userId', async (req, res, next) => {
 
 // ====================== 抓全部資料 =========================
 
-// localhost:3003/api/fav/activity
-router.get('/activity', async (req, res, next) => {
-  const sql2 =
-    'SELECT collect_exhibition.*, exhibition.exhibition_name, exhibition.exhibition_price, exhibition.start_date, exhibition.end_date, exhibition.start_time, exhibition.end_time, exhibition.exhibition_location FROM collect_exhibition JOIN exhibition ON collect_exhibition.exhibition_id = exhibition.id WHERE collect_exhibition.customer_id = ?';
+// // localhost:3003/api/fav/activity
+// router.get('/activity', async (req, res, next) => {
+//   const sql2 =
+//     'SELECT collect_exhibition.*, exhibition.exhibition_name, exhibition.exhibition_price, exhibition.start_date, exhibition.end_date, exhibition.start_time, exhibition.end_time, exhibition.exhibition_location FROM collect_exhibition JOIN exhibition ON collect_exhibition.exhibition_id = exhibition.id WHERE collect_exhibition.customer_id = 1';
 
   
-  let [exhibition] = await pool.execute(sql2);
+//   let [exhibition] = await pool.execute(sql2);
 
 
 
-  res.json(exhibition);
-});
+//   res.json(exhibition);
+// });
 
-// localhost:3003/api/fav/blog
-router.get('/blog', async (req, res, next) => {
-  const sql2 =
-    'SELECT collect_blog.* , blog.title, blog.article_context, blog.image FROM collect_blog JOIN blog ON collect_blog.blog_id = blog.id WHERE collect_blog.customer_id = 1';
-
-  
-  let [blog] = await pool.execute(sql2);
-
-  res.json(blog);
-});
-
-// localhost:3003/api/fav/product
-router.get('/product', async (req, res, next) => {
-  const sql2 =
-    'SELECT collect_product.*, product.product_name, product.price, product.image FROM collect_product JOIN product ON collect_product.product_id = product.id WHERE collect_product.customer_id = 1';
+// // localhost:3003/api/fav/blog
+// router.get('/blog', async (req, res, next) => {
+//   const sql2 =
+//     'SELECT collect_blog.* , blog.title, blog.article_context, blog.image FROM collect_blog JOIN blog ON collect_blog.blog_id = blog.id WHERE collect_blog.customer_id = 1';
 
   
-  let [product] = await pool.execute(sql2);
+//   let [blog] = await pool.execute(sql2);
 
-  res.json(product);
-});
+//   res.json(blog);
+// });
+
+// // localhost:3003/api/fav/product
+// router.get('/product', async (req, res, next) => {
+//   const sql2 =
+//     'SELECT collect_product.*, product.product_name, product.price, product.image FROM collect_product JOIN product ON collect_product.product_id = product.id WHERE collect_product.customer_id = 1';
+
+  
+//   let [product] = await pool.execute(sql2);
+
+//   res.json(product);
+// });
 
 // localhost:3003/api/fav/product/check
 router.get('/product/check/:userId/:productId', async (req, res, next) => {

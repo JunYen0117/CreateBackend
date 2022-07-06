@@ -6,9 +6,9 @@ const pool = require('../utils/database');
 
 //  改變customer_order 的 valid 改為1 (已完成)
 
-//  TODO: localhost:3003/api/productorder/shipped/:orderId/:valid
+//  TODO: localhost:3003/api/productorder/shipped/:customer_id/:orderId/:valid
 
-router.get('/shipped/:orderId/:valid', async (req, res, next) => {
+router.get('/shipped/:customer_id/:orderId/:valid', async (req, res, next) => {
   const sql3 = 'UPDATE customer_order SET valid = 1 WHERE id = ?';
 
   //console.log(req.params.orderId)
@@ -25,9 +25,9 @@ router.get('/shipped/:orderId/:valid', async (req, res, next) => {
 
 // 改變customer_order_detail 的 valid
 
-//  TODO:  localhost:3003/api/productorder/notshipped/:orderId/:valid
+//  TODO:  localhost:3003/api/productorder/notshipped/:customer_id/:orderId/:valid
 
-router.get('/notshipped/:orderId/:valid', async (req, res, next) => {
+router.get('/notshipped/:customer_id/:orderId/:valid', async (req, res, next) => {
   const sql3 = 'UPDATE customer_order SET valid = 0 WHERE id = ?';
 
   //console.log(req.params.orderId)
@@ -44,8 +44,8 @@ router.get('/notshipped/:orderId/:valid', async (req, res, next) => {
 
 //  抓 id, vendor, productnum, product_name, price, account, total, image
 
-// TODO:  localhost:3003/api/productorder/shipped/:orderID
-router.get('/shipped/:orderId', async (req, res, next) => {
+// TODO:  localhost:3003/api/productorder/shipped/:customer_id/:orderID
+router.get('/shipped/:customer_id/:orderId', async (req, res, next) => {
   // console.log('orderId', req.params.orderId)
   const sql2 =
     'SELECT customer_order_detail.order_id, customer_order_detail.price, customer_order_detail.amount, customer_order_detail.subtotal, product.product_name, product.product_num, product.image, vendor.business_name FROM customer_order_detail JOIN product ON customer_order_detail.product_id = product.id JOIN vendor ON customer_order_detail.vendor_id = vendor.id WHERE order_id = ? ';
@@ -94,8 +94,8 @@ router.get('/shipped/:orderId', async (req, res, next) => {
 
 //   抓 id, vendor, productnum, product_name, price, account, total, image
 
-// TODO: localhost:3003/api/productorder/notshipped/:orderID
-router.get('/notshipped/:orderId', async (req, res, next) => {
+// TODO: localhost:3003/api/productorder/notshipped/:customer_id/:orderID
+router.get('/notshipped/:customer_id/:orderId', async (req, res, next) => {
   // console.log('orderId', req.params.orderId)
   const sql2 =
     'SELECT customer_order_detail.order_id, customer_order_detail.price, customer_order_detail.amount, customer_order_detail.subtotal, product.product_name, product.product_num, product.image, vendor.business_name FROM customer_order_detail JOIN product ON customer_order_detail.product_id = product.id JOIN vendor ON customer_order_detail.vendor_id = vendor.id WHERE order_id = ? ';
@@ -144,8 +144,8 @@ res.json({
 
 //  抓 id, vendor, productnum, product_name, price, account, total, image
 
-// TODO: localhost:3003/api/productorder/cancel/:orderID
-router.get('/cancel/:orderId', async (req, res, next) => {
+// TODO: localhost:3003/api/productorder/cancel/:customer_id/:orderID
+router.get('/cancel/:customer_id/:orderId', async (req, res, next) => {
   // console.log('orderId', req.params.orderId)
   const sql2 =
     'SELECT customer_order_detail.order_id, customer_order_detail.price, customer_order_detail.amount, customer_order_detail.subtotal, product.product_name, product.product_num, product.image, vendor.business_name FROM customer_order_detail JOIN product ON customer_order_detail.product_id = product.id JOIN vendor ON customer_order_detail.vendor_id = vendor.id WHERE order_id = ? ';
@@ -194,8 +194,8 @@ router.get('/cancel/:orderId', async (req, res, next) => {
 
 //  抓 id, vendor, productnum, product_name, price, account, total, image
 
-// TODO: localhost:3003/api/productorder/finish/:orderID
-router.get('/finish/:orderId', async (req, res, next) => {
+// TODO: localhost:3003/api/productorder/finish/:customer_id/:orderID
+router.get('/finish/:customer_id/:orderId', async (req, res, next) => {
   // console.log('orderId', req.params.orderId)
   const sql2 =
     'SELECT customer_order_detail.order_id, customer_order_detail.product_id, customer_order_detail.price, customer_order_detail.amount, customer_order_detail.subtotal, product.product_name, product.product_num, product.image, vendor.business_name FROM customer_order_detail JOIN product ON customer_order_detail.product_id = product.id JOIN vendor ON customer_order_detail.vendor_id = vendor.id WHERE order_id = ? ';
