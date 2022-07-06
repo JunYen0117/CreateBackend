@@ -32,7 +32,7 @@ router.get('/product/checked', async (req, res, next) => {
 
 // localhost:3003/api/comment/product/1
 router.get('/product/:productId', async (req, res, next) => {
-  const sql = 'SELECT product_comment.*, customer.member_name FROM product_comment JOIN customer ON product_comment.customer_id = customer.id WHERE product_comment.product_id = ?';
+  const sql = 'SELECT product_comment.*, customer.member_name, customer.avatar FROM product_comment JOIN customer ON product_comment.customer_id = customer.id WHERE product_comment.product_id = ?';
 
   let [comment] = await pool.execute(sql, [req.params.productId]);
 
