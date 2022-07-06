@@ -44,12 +44,28 @@ app.use('/images/members', express.static(path.join(__dirname, 'public', 'member
 // 商品圖片
 // http://localhost:3003/images/product/1_1咖啡壺.jpg
 app.use('/images/product', express.static(path.join(__dirname, 'public', 'img', 'products')));
+//展覽圖片
+app.use('/images/exhibition', express.static(path.join(__dirname, 'public', 'img', 'exhibition')));
 
 // Routers
 // 購物商城
 const productRouter = require('./routers/productRouter');
 app.use('/api/product', productRouter);
 
+const courseRouter = require('./routers/courseRouter')
+app.use('/api/course', courseRouter);
+
+const exhibitionRouter = require('./routers/exhibitionRouter')
+app.use('/api/exhibition', exhibitionRouter);
+
+const activitypaymentRouter = require('./routers/activitypaymentRouter')
+app.use('/api/activitypayment', activitypaymentRouter);
+
+const activityRouter = require('./routers/activityRouter')
+app.use('/api/activity', activityRouter);
+
+const signupRouter = require('./routers/signupRouter')
+app.use('/api/signup', signupRouter);
 // 購物車
 const cartRouter = require('./routers/cartRouter');
 app.use('/api/cart', cartRouter);
