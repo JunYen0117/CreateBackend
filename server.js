@@ -79,8 +79,6 @@ app.use('/api/member', memberRouter);
 const emailRouter = require('./routers/emailRouter');
 app.use('/api/email', emailRouter);
 
-const productRouter = require('./routers/productRouter');
-app.use('/api/product', productRouter);
 // 優惠券
 const couponRouter = require('./routers/couponRouter')
 app.use('/api/coupons', couponRouter);
