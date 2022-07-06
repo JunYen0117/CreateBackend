@@ -65,7 +65,6 @@ router.get('/product/add/:userId/:prdId', async (req, res, next) => {
   res.json({code: 0 , message: '加入成功'})
 });
 
-  
 // ====================== userId =========================
   
 // localhost:3003/api/fav/activity/:userId
