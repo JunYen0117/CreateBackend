@@ -88,7 +88,6 @@ router.get('/shipped/:customer_id/:orderId', async (req, res, next) => {
   });
 });
 
-
 //   抓 id, vendor, productnum, product_name, price, account, total, image
 
 // TODO: localhost:3003/api/productorder/notshipped/:customer_id/:orderID
