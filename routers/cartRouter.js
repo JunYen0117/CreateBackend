@@ -7,7 +7,7 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET);
 router.post('/orderDetails', async (req, res, next) => {
   // shippingData
   const shippingData = req.body.shippingData;
-  
+
   // 運送方式
   let delivery = shippingData.delivery;
   if (Number(delivery) === 1) {

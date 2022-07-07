@@ -4,8 +4,8 @@ const pool = require('../utils/database');
 const LinePay = require('line-pay-v3')
 
 let linePay = new LinePay({
-  channelId: '',
-  channelSecret: '',
+  channelId: '1657264590',
+  channelSecret: 'b5a06dcc158eaba5e2bdb67e9e13e818',
   uri: 'https://sandbox-api-pay.line.me'
 })
 let payUrl=''

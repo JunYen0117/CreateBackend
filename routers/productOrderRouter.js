@@ -181,9 +181,9 @@ router.get('/cancel/:customer_id/:orderId', async (req, res, next) => {
   });
 });
 
-//  抓 id, vendor, productnum, product_name, price, account, total, image
+// 抓 id, vendor, productnum, product_name, price, account, total, image
 
-// TODO: localhost:3003/api/productorder/finish/:customer_id/:orderID
+// localhost:3003/api/productorder/finish/:customer_id/:orderID
 router.get('/finish/:customer_id/:orderId', async (req, res, next) => {
   // console.log('orderId', req.params.orderId)
   const sql2 =
@@ -227,7 +227,7 @@ router.get('/finish/:customer_id/:orderId', async (req, res, next) => {
 
 // ======================== List ==============================
 
-// TODO: localhost:3003/api/productorder/shipped/:customer_id
+// localhost:3003/api/productorder/shipped/:customer_id
 router.get('/shipped/:customer_id', async (req, res, next) => {
   // 抓使用者id為1的訂單列表
   const sql2 = 'SELECT * FROM customer_order WHERE customer_order.customer_id = ? AND valid = 3 '; //消費者寫死 valid=3 shipped
@@ -280,7 +280,7 @@ router.get('/shipped/:customer_id', async (req, res, next) => {
   });
 });
 
-// TODO: localhost:3003/api/productorder/notshipped/:customer_id
+// localhost:3003/api/productorder/notshipped/:customer_id
 router.get('/notshipped/:customer_id', async (req, res, next) => {
   // 抓使用者id為1的訂單列表
   const sql2 = 'SELECT * FROM customer_order WHERE customer_order.customer_id = ? AND valid = 2 ';
@@ -334,7 +334,7 @@ router.get('/notshipped/:customer_id', async (req, res, next) => {
   });
 });
 
-// TODO:  localhost:3003/api/productorder/finish/:customer_id
+// localhost:3003/api/productorder/finish/:customer_id
 router.get('/finish/:customer_id', async (req, res, next) => {
   // 抓使用者id為1的訂單列表
   const sql2 = 'SELECT * FROM customer_order WHERE customer_order.customer_id = ? AND valid = 1 '; //消費者寫死
@@ -389,7 +389,7 @@ router.get('/finish/:customer_id', async (req, res, next) => {
 });
 
 // localhost:3003/api/productorder/cancel/:customer_id
-TODO: router.get('/cancel/:customer_id', async (req, res, next) => {
+router.get('/cancel/:customer_id', async (req, res, next) => {
   // 抓使用者id為1的訂單列表
   const sql2 = 'SELECT * FROM customer_order WHERE customer_order.customer_id = ? AND valid= 0';
   //消費者目前寫死 valid等於0
