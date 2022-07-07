@@ -16,7 +16,7 @@ router.post('/product/add', async (req, res, next) => {
       let [comment] = await pool.execute(sql, [req.body[i].order_id, req.body[i].product_id, req.body[i].customer_id, req.body[i].star]); 
     }
   }
-  
+
   res.json({ message: 'OK' });
 });
 
