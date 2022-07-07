@@ -5,10 +5,8 @@ const pool = require('../utils/database');
 // =============== 加進資料庫 =====================
 
 // localhost:3003/api/comment/product/add
-TODO: router.post('/product/add', async (req, res, next) => {
-  // console.log('data', req.body);
-
-  let sql = 'INSERT INTO product_comment (order_id, product_id, customer_id, comment, star) VALUES (?,?,?,?,?)';
+router.post('/product/add', async (req, res, next) => {
+  const sql = 'INSERT INTO product_comment (order_id, product_id, customer_id, comment, star) VALUES (?,?,?,?,?)';
 
   for (i = 0; i < req.body.length; i++) {
     if (req.body[i].comment) {
@@ -23,7 +21,8 @@ TODO: router.post('/product/add', async (req, res, next) => {
 });
 
 // localhost:3003/api/comment/product/checked
-TODO: router.get('/product/checked', async (req, res, next) => {
+router.get('/product/checked', async (req, res, next) => {
+
   const sql = 'SELECT product_comment.* FROM product_comment WHERE product_comment.order_id= ?';
 
   let [check] = await pool.execute(sql, [req.query.orderId]);
@@ -33,11 +32,12 @@ TODO: router.get('/product/checked', async (req, res, next) => {
 
 // localhost:3003/api/comment/product/1
 router.get('/product/:productId', async (req, res, next) => {
-  const sql = 'SELECT product_comment.*, customer.member_name FROM product_comment JOIN customer ON product_comment.customer_id = customer.id WHERE product_comment.product_id = ?';
+  const sql = 'SELECT product_comment.*, customer.member_name, customer.avatar FROM product_comment JOIN customer ON product_comment.customer_id = customer.id WHERE product_comment.product_id = ?';
 
   let [comment] = await pool.execute(sql, [req.params.productId]);
 
   res.json(comment);
 });
+
 
 module.exports = router;
