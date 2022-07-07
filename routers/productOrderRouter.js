@@ -389,11 +389,11 @@ router.get('/finish/:customer_id', async (req, res, next) => {
 
 // localhost:3003/api/productorder/cancel/:customer_id
 TODO: router.get('/cancel/:customer_id', async (req, res, next) => {
-  // 抓使用者id為1的訂單列表
+  // 抓訂單列表
   const sql2 = 'SELECT * FROM customer_order WHERE customer_order.customer_id = ? AND valid= 0';
-  //消費者目前寫死 valid等於0
+  // valid等於0
 
-  // 抓使用者id為1的訂單總數
+  // 抓訂單總數
   let [productorder] = await pool.execute(sql2, [req.params.customer_id]);
   // console.log(productorder)
   let orderId = [];
