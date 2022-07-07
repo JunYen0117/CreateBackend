@@ -14,9 +14,10 @@ router.get('/', async (req, res, next) => {
 // 品牌商品
 // localhost:3003/api/brandpage/brand/1
 router.get('/brand/:brandId', async (req, res, next) => {
+  const sql = 'SELECT vendor.id, product.id AS productId ,vendor.business_name, vendor.logo, vendor.introduce, vendor.address, vendor.create_time, product.product_name, product.price, product.image FROM vendor JOIN product ON vendor.id = product.vendor_id WHERE vendor.id = ?'
 
-  const sql = 'SELECT vendor.id, vendor.business_name, vendor.logo, vendor.introduce, vendor.address, vendor.create_time, product.product_name, product.price, product.image FROM vendor JOIN product ON vendor.id = product.vendor_id WHERE vendor.id = ?'
   let [brand] = await pool.execute(sql, [req.params.brandId]);
+
   res.json({
     brand: brand,
     brandName: brand[0].business_name,
