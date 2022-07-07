@@ -84,8 +84,6 @@ app.use('/api/activitypayment', activitypaymentRouter);
 const activityRouter = require('./routers/activityRouter')
 app.use('/api/activity', activityRouter);
 
-const signupRouter = require('./routers/signupRouter')
-app.use('/api/signup', signupRouter);
 // 購物車
 const cartRouter = require('./routers/cartRouter');
 app.use('/api/cart', cartRouter);
