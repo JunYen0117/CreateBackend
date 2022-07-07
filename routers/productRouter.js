@@ -85,7 +85,7 @@ router.get('/category/:categoryId', async (req, res, next) => {
 router.get('/classification', async (req, res, next) => {
   const sql = 'SELECT * FROM classification';
   const [classification] = await pool.execute(sql);
-  res.json([{msg: 'Email 已註冊過', param: 'account', location: 'body'}]);
+  res.json([classification]);
 });
 
 // localhost:3003/api/product/classification/1/category
@@ -108,7 +108,8 @@ router.get('/search', async (req, res, next) => {
   console.log('minPrice', minPrice);
   console.log('maxPrice', maxPrice);
 
-  const sql = 'SELECT product.id, product.product_name, product.price, product.image, vendor.business_name FROM product JOIN vendor ON product.vendor_id = vendor.id WHERE product.price > ? AND product.price < ?';
+  const sql =
+    'SELECT product.id, product.product_name, product.price, product.image, vendor.business_name FROM product JOIN vendor ON product.vendor_id = vendor.id WHERE product.price > ? AND product.price < ?';
   const [products] = await pool.execute(sql, [minPrice, maxPrice]);
 
   const total = products.length;
@@ -123,7 +124,8 @@ router.get('/search', async (req, res, next) => {
   let offset = (page - 1) * perPage;
   console.log('offset:', offset);
 
-  const sqlPage = 'SELECT product.id, product.product_name, product.price, product.image, vendor.business_name FROM product JOIN vendor ON product.vendor_id = vendor.id WHERE product.price > ? AND product.price < ?  LIMIT ? OFFSET ?';
+  const sqlPage =
+    'SELECT product.id, product.product_name, product.price, product.image, vendor.business_name FROM product JOIN vendor ON product.vendor_id = vendor.id WHERE product.price > ? AND product.price < ?  LIMIT ? OFFSET ?';
   const [pageProducts] = await pool.execute(sqlPage, [minPrice, maxPrice, perPage, offset]);
 
   res.json({
@@ -134,17 +136,17 @@ router.get('/search', async (req, res, next) => {
     },
     data: pageProducts,
   });
-  
 });
 // --------- Search ---------
 
 // --------- Product Detail ---------
 // localhost:3003/api/product/detail/1
 router.get('/detail/:productId', async (req, res, next) => {
-  let sql = 'SELECT product.id, product.product_name, product.price, product.image, product.vendor_id, vendor.business_name, product.product_intro, product.product_info FROM product JOIN vendor ON product.vendor_id = vendor.id WHERE product.id = ?';
+  let sql =
+    'SELECT product.id, product.product_name, product.price, product.image, product.vendor_id, vendor.business_name, product.product_intro, product.product_info FROM product JOIN vendor ON product.vendor_id = vendor.id WHERE product.id = ?';
   let [product] = await pool.execute(sql, [req.params.productId]);
   res.json(product);
-})
+});
 // --------- Product Detail ---------
 
 module.exports = router;
