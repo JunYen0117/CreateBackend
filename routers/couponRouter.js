@@ -92,7 +92,7 @@ router.get('/receive', async (req, res, next) => {
   // console.log('receiveList:', receiveList);
 });
 
-// 已失效優惠券(優惠券過期)
+// 針對所有使用者撈出已失效優惠券(優惠券過期)
 // localhost:3003/api/coupons/updateCoupon
 router.get('/updateCoupon', async (req, res, next) => {
   
@@ -262,6 +262,30 @@ router.post('/insertCoupon', async (req, res, next) => {
 //   ],
 //   "msg": "更新成功"
 // }
+
+
+
+// 已失效優惠券(優惠券過期)--> 此版本棄用
+// localhost:3003/api/coupons/updateCoupon
+// router.post('/updateCoupon', async (req, res, next) => {
+//   for (let i = 0; i < req.body.length; i++) {
+//     [updateCoupon] = await pool.execute(
+//       'SELECT * FROM coupon_take right JOIN coupon on coupon_id = coupon.id where customer_id = ? AND coupon_end_period < CURDATE() ORDER BY `coupon_id` ASC',
+//       [req.body[i].customer_id]
+//     );
+//   }
+//   console.log('updateCoupon:', updateCoupon);
+//   for (let i = 0; i < req.body.length; i++) {
+//     [updateCouponStatus] = await pool.execute('UPDATE coupon_take SET coupon_status = "0" WHERE coupon_id = ? ', [updateCoupon[i].coupon_id]);
+//     console.log(req.body);
+//     console.log('updateCouponStatus:', updateCouponStatus);
+//   }
+//   res.json({
+//     updateCoupon,
+//     updateCouponStatus, // 更新優惠券狀態
+//     msg: '更新成功',
+//   });
+// });
 
 // 單一優惠券的分頁
 // router.get('/:couponNum', async (req, res, next) => {
