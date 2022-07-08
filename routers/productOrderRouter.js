@@ -186,12 +186,12 @@ router.get('/cancel/detail/:orderId', async (req, res, next) => {
 router.get('/finish/detail/:orderId', async (req, res, next) => {
   // console.log('orderId', req.params.orderId)
   const sql2 =
-    'SELECT customer_order_detail.order_id, customer_order_detail.price, customer_order_detail.amount, customer_order_detail.subtotal, product.product_name, product.product_num, product.image, vendor.business_name, customer_order.customer_id FROM customer_order_detail JOIN product ON customer_order_detail.product_id = product.id JOIN vendor ON customer_order_detail.vendor_id = vendor.id JOIN customer_order ON customer_order_detail.order_id = customer_order.id WHERE customer_order_detail.order_id = ? ';
+    'SELECT customer_order_detail.order_id,customer_order_detail.product_id, customer_order_detail.price, customer_order_detail.amount, customer_order_detail.subtotal, product.product_name, product.product_num, product.image, vendor.business_name, customer_order.customer_id FROM customer_order_detail JOIN product ON customer_order_detail.product_id = product.id JOIN vendor ON customer_order_detail.vendor_id = vendor.id JOIN customer_order ON customer_order_detail.order_id = customer_order.id WHERE customer_order_detail.order_id = ? ';
 
   // 取得商品數量[req.params.orderId]
   let [productdetail] = await pool.execute(sql2, [req.params.orderId]);
   let total = productdetail;
-
+  // console.log(total);
   // 抓總金額
   let result = 0;
   for (let i = 0; i < total.length; i++) {
@@ -336,7 +336,7 @@ router.get('/notshipped/:customer_id', async (req, res, next) => {
 // localhost:3003/api/productorder/finish/:customer_id
 router.get('/finish/:customer_id', async (req, res, next) => {
   // 抓使用者id為1的訂單列表
-  const sql2 = 'SELECT * FROM customer_order WHERE customer_order.customer_id = ? AND valid = 1 '; 
+  const sql2 = 'SELECT * FROM customer_order WHERE customer_order.customer_id = ? AND valid = 1 ';
 
   // 抓使用者id為1的訂單總數
   let [productorder] = await pool.execute(sql2, [req.params.customer_id]);
@@ -387,7 +387,7 @@ router.get('/finish/:customer_id', async (req, res, next) => {
   });
 });
 
-  // 抓使用者id為1的訂單列表
+// 抓使用者id為1的訂單列表
 router.get('/cancel/:customer_id', async (req, res, next) => {
   // 抓訂單列表
   const sql2 = 'SELECT * FROM customer_order WHERE customer_order.customer_id = ? AND valid= 0';
