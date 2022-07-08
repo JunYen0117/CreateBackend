@@ -59,7 +59,7 @@ router.post('/', async (req, res, next) => {
 
     const date = new Date();  
   
-    let [result] = await pool.execute('INSERT INTO exhibition_order (customer_id, exhibition_id, count, total,order_name,order_email,order_phone,order_date) VALUES (1, ?, ?, ?, ?, ?, ?,?)', [req.body.order.exhibition_id, req.body.order.count, req.body.order.total,req.body.orderName,req.body.orderEmail,req.body.orderPhone,date]);
+    let [result] = await pool.execute('INSERT INTO exhibition_order (customer_id, exhibition_id, count, total,order_name,order_email,order_phone,order_date) VALUES (?, ?, ?, ?, ?, ?, ?,?)', [req.body.userID, req.body.order.exhibition_id, req.body.order.count, req.body.order.total,req.body.orderName,req.body.orderEmail,req.body.orderPhone,date]);
 
 
   res.json({ code: 0, result: 'OK',payUrl:payUrl});

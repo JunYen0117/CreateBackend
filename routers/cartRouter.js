@@ -6,6 +6,7 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET);
 // localhost:3003/api/cart/orderDetails
 router.post('/orderDetails', async (req, res, next) => {
   // shippingData
+  const userID = req.body.userID;
   const shippingData = req.body.shippingData;
 
   // 運送方式
@@ -34,9 +35,8 @@ router.post('/orderDetails', async (req, res, next) => {
   const date = new Date();  
 
   // customer_order
-  // customer_id 待修改 -> 會員id
-  const sql = 'INSERT INTO customer_order (customer_id, recipient, recipient_email, tel, address, order_date, delivery, total, valid) VALUES (1, ?, ?, ?, ?, ?, ?, ?, 2)';
-  const [order] = await pool.execute(sql, [recipient, recipientEmail, tel, address, date, delivery, total]);
+  const sql = 'INSERT INTO customer_order (customer_id, recipient, recipient_email, tel, address, order_date, delivery, total, valid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 2)';
+  const [order] = await pool.execute(sql, [userID ,recipient, recipientEmail, tel, address, date, delivery, total]);
 
   // customer_order_detail
   const orderId = order.insertId;
