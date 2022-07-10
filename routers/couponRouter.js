@@ -11,11 +11,25 @@ router.use((req, res, next) => {
   next();
 });
 
+// 新戶的優惠券
+// 加入的 (1.6)
+//localhost:3003/api/coupons/available/new/:customer_id
+router.get('/available/new/:customer_id', async (req, res, next) => {
+  let [couponOne] = await pool.execute('INSERT INTO coupon_take (customer_id, coupon_id, coupon_status) VALUES (?,?,?),(?,?,?)', [
+    req.params.customer_id,
+    1,
+    1,
+    req.params.customer_id,
+    6,
+    1,
+  ]);
+ 
+  res.json({ code: 0, message: '註冊成功' });
+});
+
 // 撈出使用者全部可領取的優惠券 (coupon_send_status=1)
 // localhost:3003/api/coupons/available?page=1
 router.get('/available/:customer_id', async (req, res, next) => {
-  // console.log('撈出使用者全部可領取的優惠券:可領取的優惠券列表');
-
   let page = req.query.page || 1;
   // console.log('current page', page);
 
@@ -23,6 +37,7 @@ router.get('/available/:customer_id', async (req, res, next) => {
     'SELECT * FROM coupon WHERE id NOT IN  (SELECT coupon_id from coupon_take where customer_id= ?) AND coupon_send_type=2 ORDER BY `discount` ASC',
     [req.params.customer_id]
   );
+  // console.log('撈出使用者全部可領取的優惠券:可領取的優惠券列表',availableList );
 
   const total = availableList.length;
   // console.log('total:', total);
