@@ -10,13 +10,13 @@ const bcrypt = require('bcrypt');
 // 認證規則
 const registerRules = [
   body('account').isEmail().withMessage('Email 欄位請填寫正確格式'),
-  body('password').isLength({ min: 3 }).withMessage('密碼長度至少為3'),
+  body('password').isLength({ min: 3 }).withMessage('密碼長度不足'),
   body('re_password')
     .custom((value, { req }) => {
       // 驗證規則
       return value === req.body.password;
     })
-    .withMessage('密碼驗證不一致'),
+    .withMessage('密碼輸入不一致'),
 ];
 
 // http://localhost:3003/api/auth/signup
