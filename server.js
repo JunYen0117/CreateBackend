@@ -95,8 +95,13 @@ const productOrderRouter = require('./routers/productOrderRouter');
 app.use('/api/productorder', productOrderRouter);
 
 // 收藏
+<<<<<<< HEAD
 const favRouter = require('./routers/favRouter');
 app.use('/api/fav', favRouter);
+=======
+const favRouter = require ('./routers/favRouter')
+app.use('/api/fav', favRouter)
+>>>>>>> f5d31828c68d0d52d146d7c06d19619fa9e28881
 
 // 評論
 const commentRouter = require('./routers/commentRouter');
