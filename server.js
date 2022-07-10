@@ -61,27 +61,27 @@ const productRouter = require('./routers/productRouter');
 app.use('/api/product', productRouter);
 
 // 首頁主頁
-const frontRouter = require('./routers/frontpageRouter')
+const frontRouter = require('./routers/frontpageRouter');
 app.use('/api/front', frontRouter);
 
-// 品牌頁 
-const brandspageRouter = require('./routers/brandspageRouter')
+// 品牌頁
+const brandspageRouter = require('./routers/brandspageRouter');
 app.use('/api/brandpage', brandspageRouter);
 
 // 文章頁
-const artmagazineRouter = require('./routers/artmagazineRouter')
+const artmagazineRouter = require('./routers/artmagazineRouter');
 app.use('/api/artmagazine', artmagazineRouter);
 
-const courseRouter = require('./routers/courseRouter')
+const courseRouter = require('./routers/courseRouter');
 app.use('/api/course', courseRouter);
 
-const exhibitionRouter = require('./routers/exhibitionRouter')
+const exhibitionRouter = require('./routers/exhibitionRouter');
 app.use('/api/exhibition', exhibitionRouter);
 
-const activitypaymentRouter = require('./routers/activitypaymentRouter')
+const activitypaymentRouter = require('./routers/activitypaymentRouter');
 app.use('/api/activitypayment', activitypaymentRouter);
 
-const activityRouter = require('./routers/activityRouter')
+const activityRouter = require('./routers/activityRouter');
 app.use('/api/activity', activityRouter);
 
 // const signupRouter = require('./routers/signupRouter')
@@ -95,13 +95,8 @@ const productOrderRouter = require('./routers/productOrderRouter');
 app.use('/api/productorder', productOrderRouter);
 
 // 收藏
-<<<<<<< HEAD
 const favRouter = require('./routers/favRouter');
 app.use('/api/fav', favRouter);
-=======
-const favRouter = require ('./routers/favRouter')
-app.use('/api/fav', favRouter)
->>>>>>> f5d31828c68d0d52d146d7c06d19619fa9e28881
 
 // 評論
 const commentRouter = require('./routers/commentRouter');
