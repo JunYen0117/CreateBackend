@@ -10,18 +10,18 @@ const bcrypt = require('bcrypt');
 // 認證規則
 const registerRules = [
   body('account').isEmail().withMessage('Email 欄位請填寫正確格式'),
-  body('password').isLength({ min: 3 }).withMessage('密碼長度至少為3'),
+  body('password').isLength({ min: 3 }).withMessage('密碼長度不足'),
   body('re_password')
     .custom((value, { req }) => {
       // 驗證規則
       return value === req.body.password;
     })
-    .withMessage('密碼驗證不一致'),
+    .withMessage('密碼輸入不一致'),
 ];
 
 // http://localhost:3003/api/auth/signup
 router.post('/signup', registerRules, async (req, res, next) => {
-  console.log('signup body:', req.body); //req.body 前端送過來的 form 表單的資料
+  // console.log('signup body:', req.body); //req.body 前端送過來的 form 表單的資料
 
   // 拿到驗證結果 -> 驗證資料
   const validateResults = validationResult(req);
@@ -42,7 +42,7 @@ router.post('/signup', registerRules, async (req, res, next) => {
   console.log('members', members);
   if (members.length !== 0) {
     // 這個 email 有註冊過
-    return res.status(400).json([{msg: 'Email 已註冊過', param: 'account', location: 'body'}]);
+    return res.status(400).json([{ msg: 'Email 已註冊過', param: 'account', location: 'body' }]);
   }
 
   // 密碼雜湊 hash ; bcrypt (長度: 60)
@@ -63,7 +63,6 @@ router.post('/signup', registerRules, async (req, res, next) => {
     1,
     date,
   ]);
-  // console.log('insert result:', result);
 
   let signupData = {
     member_num: '',
@@ -78,8 +77,9 @@ router.post('/signup', registerRules, async (req, res, next) => {
     valid: 1,
   };
 
+  // console.log('insert result:', result.insertId);
   // 驗證成功 response 給前端
-  res.json({ code: 0, result: '註冊成功', signupData: signupData });
+  res.json({ code: 0, result: '註冊成功', signupData: signupData, id:result.insertId });
 });
 
 // -------------------------------------------------------------------------------------

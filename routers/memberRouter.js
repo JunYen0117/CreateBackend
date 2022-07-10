@@ -104,7 +104,8 @@ router.post('/password/change', passwordRules, async (req, res, next) => {
 
   // 比對 密碼是否輸入正確
   let passwordCompareResult = await bcrypt.compare(req.body.oldPassword, customer[0].password);
-
+console.log('req.body.oldPassword:',req.body.oldPassword)
+console.log('customer[0].password:',customer[0].password)
   // console.log(passwordCompareResult);
 
   if (passwordCompareResult === false) {
