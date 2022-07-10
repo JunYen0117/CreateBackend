@@ -64,8 +64,8 @@ app.use('/api/activitypayment', activitypaymentRouter);
 const activityRouter = require('./routers/activityRouter')
 app.use('/api/activity', activityRouter);
 
-const signupRouter = require('./routers/signupRouter')
-app.use('/api/signup', signupRouter);
+// const signupRouter = require('./routers/signupRouter')
+// app.use('/api/signup', signupRouter);
 // 購物車
 const cartRouter = require('./routers/cartRouter');
 app.use('/api/cart', cartRouter);
@@ -76,7 +76,7 @@ app.use('/api/productorder', productOrderRouter);
 
 // 收藏
 const favRouter = require ('./routers/favRouter')
-app.use('/api/fav', favRouter);
+app.use('/api/fav', favRouter)
 
 // 評論
 const commentRouter = require ('./routers/commentRouter')

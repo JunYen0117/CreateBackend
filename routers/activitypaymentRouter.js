@@ -4,13 +4,23 @@ const pool = require('../utils/database');
 const LinePay = require('line-pay-v3')
 
 let linePay = new LinePay({
-  channelId: '',
-  channelSecret: '',
+  channelId: '1657264590',
+  channelSecret: 'b5a06dcc158eaba5e2bdb67e9e13e818',
   uri: 'https://sandbox-api-pay.line.me'
 })
+randomNumber=()=>{
+  const now = new Date()
+  let month = now.getMonth() + 1
+  let day = now.getDate()
+  let hour = now.getHours()
+  let minutes = now.getMinutes()
+  let seconds = now.getSeconds()
+  return now.getFullYear().toString() + month.toString() + day + hour + minutes + seconds + (Math.round(Math.random() * 89 + 100)).toString()
+ };
+
 let payUrl=''
 let amount=0
-let orderdate = new Date();
+let orderdate = randomNumber();
 // localhost:3003/api/activitypayment
 router.post('/', async (req, res, next) => {
   

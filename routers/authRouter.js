@@ -87,7 +87,7 @@ router.post('/signup', registerRules, async (req, res, next) => {
 // http://localhost:3003/api/auth/login
 router.post('/login', async (req, res, next) => {
   // 確認資料有收到
-  // console.log('req.body', req.body);
+  console.log('req.body', req.body);
 
   // 確認 資料庫 有沒有這個帳號 -> 用 WHERE 篩選 account
   const [customers] = await pool.execute('SELECT * FROM customer WHERE account = ?', [req.body.account]);
