@@ -15,7 +15,7 @@ router.get('/', async (req, res, next) => {
     productsort = 'ORDER BY product.id ASC';
   }
 
-  console.log('productsort :', productsort);
+  // console.log('productsort :', productsort);
 
   // 如果沒有宣告 page，則預設 page = 1
   const page = req.query.page || 1;
