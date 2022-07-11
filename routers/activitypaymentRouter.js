@@ -53,20 +53,7 @@ router.post('/', async (req, res, next) => {
     console.log(res)
     payUrl=res.info.paymentUrl.web
   })
-    // console.log('data:', req.body);
-    // data: {
-    //   order: {
-    //     exhibition_id: '1',
-    //     exhibition_name: '進擊的巨人展FINAL門票',
-    //     price: '280',
-    //     count: '2',
-    //     total: '560',
-    //     date: { start: '2022-06-25', end: '2022-08-21' }
-    //   },
-    //   orderName: '小明',
-    //   orderEmail: 'ming@test.com',
-    //   orderPhone: '0911111111'
-    // }
+
 
     const date = new Date();  
   
