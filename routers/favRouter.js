@@ -77,7 +77,7 @@ router.get('/activity/:userId', async (req, res, next) => {
 // localhost:3003/api/fav/blog/:userId
 router.get('/blog/:userId', async (req, res, next) => {
   const sql2 =
-    'SELECT collect_blog.*, blog.title, blog.article_context , blog.image FROM collect_blog JOIN blog ON collect_blog.blog_id = blog.id WHERE collect_blog.customer_id = 1 ORDER BY collect_blog.id DESC';
+    'SELECT collect_blog.*, blog.title, blog.article_context , blog.image FROM collect_blog JOIN blog ON collect_blog.blog_id = blog.id WHERE collect_blog.customer_id = ? ORDER BY collect_blog.id DESC';
 
   let [blog] = await pool.execute(sql2, [req.params.userId]);
 

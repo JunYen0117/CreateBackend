@@ -3,9 +3,10 @@ const router = express.Router();
 const pool = require('../utils/database');
 const LinePay = require('line-pay-v3')
 
+
 let linePay = new LinePay({
-  channelId: '',
-  channelSecret: '',
+  channelId: process.env.LINEPAY_ID,
+  channelSecret: process.env.LINEPAY_SECRET,
   uri: 'https://sandbox-api-pay.line.me'
 })
 randomNumber=()=>{
@@ -20,10 +21,10 @@ randomNumber=()=>{
 
 let payUrl=''
 let amount=0
-let orderdate = randomNumber();
+
 // localhost:3003/api/activitypayment
 router.post('/', async (req, res, next) => {
-  
+  let orderdate = randomNumber();
   amount=req.body.order.total
   const order = {
     amount: req.body.order.total,
@@ -49,7 +50,7 @@ router.post('/', async (req, res, next) => {
     }
   }
   const line = await linePay.request(order).then(res=>{
-    // console.log(res)
+    console.log(res)
     payUrl=res.info.paymentUrl.web
   })
     // console.log('data:', req.body);
